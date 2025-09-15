@@ -1,0 +1,23 @@
+{
+  "name": "axionlabs",
+  "version": "1.0.0",
+  "description": "Профессиональная платформа для тестирования",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000",
+    "build": "echo 'Build complete'",
+    "test": "echo 'No tests specified'",
+    "deploy": "echo 'Deploy to production'"
+  },
+  "keywords": [
+    "testing",
+    "qa",
+    "test-automation",
+    "dashboard"
+  ],
+  "author": "AxionLabs Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AxionLabs - Авторизация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="welcome-page">
+        <div class="welcome-container">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> На главную
+            </a>
+            
+            <div class="welcome-logo">
+                <i class="fas fa-bug"></i>
+            </div>
+            <h1 class="welcome-title">Добро пожаловать в AxionLabs</h1>
+            <p class="welcome-subtitle">Платформа для управления тестированием</p>
+            
+            <!-- Форма входа -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="Введите ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" required placeholder="Введите ваш пароль">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Войти</button>
+                <div class="form-switcher">
+                    Нет аккаунта? <a id="showRegister">Зарегистрироваться</a>
+                </div>
+            </form>
+            
+            <!-- Форма регистрации -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Имя</label>
+                    <input type="text" id="registerName" required placeholder="Введите ваше имя">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="Введите ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" required placeholder="Придумайте пароль">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Подтверждение пароля</label>
+                    <input type="password" id="registerConfirmPassword" required placeholder="Повторите пароль">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Зарегистрироваться</button>
+                <div class="form-switcher">
+                    Уже есть аккаунт? <a id="showLogin">Войти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   <script type="module" src="js/auth.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+</html>
