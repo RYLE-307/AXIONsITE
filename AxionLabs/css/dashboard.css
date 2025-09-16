@@ -853,4 +853,15 @@
 
 
 
+.test-case-checkbox {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+}
 
+.test-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

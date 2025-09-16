@@ -121,6 +121,10 @@
                 window.location.href = 'index.html';
             });
             
+document.getElementById('runSelectedTests').addEventListener('click', () => {
+    runSelectedTests();
+});
+
             // Переключение темы
             document.getElementById('themeToggle').addEventListener('click', () => {
                 document.body.classList.toggle('light-theme');
@@ -396,26 +400,26 @@
                 if (testCase.priority === 'high') priorityColor = 'var(--danger)';
                 if (testCase.priority === 'medium') priorityColor = 'var(--warning)';
                 
-                testCaseElement.innerHTML = `
-                    <div class="test-info">
-                        <h3>${testCase.name}</h3>
-                        <p>${testCase.description}</p>
-                        <div class="test-meta">
-                            <span><i class="fas ${icon}"></i> ${getTypeName(testCase.type)}</span>
-                            <span style="color: ${priorityColor}"><i class="fas fa-exclamation-circle"></i> ${getPriorityName(testCase.priority)}</span>
-                        </div>
-                    </div>
-                    <div class="test-status">
-                        <span class="status-badge ${getStatusClass(testCase.status)}" id="test${testCase.id}Status">${getStatusName(testCase.status)}</span>
-                    </div>
-                    <div class="test-actions">
-                      <input type="checkbox" name="" id="">
-                        <button class="btn btn-sm btn-outline" onclick="runTest(${testCase.id})">Запустить</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTestCase(${testCase.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
+               testCaseElement.innerHTML = `
+    <div class="test-info">
+        <h3>${testCase.name}</h3>
+        <p>${testCase.description}</p>
+        <div class="test-meta">
+            <span><i class="fas ${icon}"></i> ${getTypeName(testCase.type)}</span>
+            <span style="color: ${priorityColor}"><i class="fas fa-exclamation-circle"></i> ${getPriorityName(testCase.priority)}</span>
+        </div>
+    </div>
+    <div class="test-status">
+        <span class="status-badge ${getStatusClass(testCase.status)}" id="test${testCase.id}Status">${getStatusName(testCase.status)}</span>
+    </div>
+    <div class="test-actions">
+        <input type="checkbox" class="test-case-checkbox" data-test-id="${testCase.id}">
+        <button class="btn btn-sm btn-outline" onclick="runTest(${testCase.id})">Запустить</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTestCase(${testCase.id})">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+`;
                 
                 testCasesList.appendChild(testCaseElement);
             });
@@ -997,4 +1001,22 @@
 
 
 
+        function runSelectedTests() {
+    const selectedCheckboxes = document.querySelectorAll('.test-case-checkbox:checked');
+    
+    if (selectedCheckboxes.length === 0) {
+        addResultLine('Не выбрано ни одного теста для запуска', 'warning');
+        return;
+    }
+
+    addResultLine(`Запуск ${selectedCheckboxes.length} выбранных тестов...`, 'warning');
+    
+    selectedCheckboxes.forEach(checkbox => {
+        const testId = parseInt(checkbox.getAttribute('data-test-id'));
+        const testCase = testCases.find(t => t.id === testId);
         
+        if (testCase && testCase.status !== 'running') {
+            runTest(testId);
+        }
+    });
+}
