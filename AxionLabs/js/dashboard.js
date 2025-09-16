@@ -92,32 +92,7 @@
                 }
             ];
             
-            testCases = savedTestCases ? JSON.parse(savedTestCases) : [
-                {
-                    id: 1,
-                    projectId: 1,
-                    name: "Тест аутентификации",
-                    description: "Проверка входа в систему с корректными и некорректными данными",
-                    type: "functional",
-                    priority: "high",
-                    expectedResult: "Система должна принимать только корректные учетные данные",
-                    status: "not-run",
-                    passed: false,
-                    errorDetails: null
-                },
-                {
-                    id: 2,
-                    projectId: 1,
-                    name: "Тест регистрации",
-                    description: "Проверка создания нового аккаунта",
-                    type: "functional",
-                    priority: "medium",
-                    expectedResult: "Новый пользователь должен быть успешно создан",
-                    status: "not-run",
-                    passed: false,
-                    errorDetails: null
-                }
-            ];
+            testCases = savedTestCases ? JSON.parse(savedTestCases) : [];
             
             testRuns = savedTestRuns ? JSON.parse(savedTestRuns) : [];
             
@@ -174,9 +149,9 @@
             });
             
             // Запуск всех тестов
-            document.getElementById('runAllTests').addEventListener('click', () => {
-                runAllTests();
-            });
+            // document.getElementById('runAllTests').addEventListener('click', () => {
+            //     runAllTests();
+            // });
             
             // Сброс результатов
             document.getElementById('resetTests').addEventListener('click', () => {
@@ -434,6 +409,7 @@
                         <span class="status-badge ${getStatusClass(testCase.status)}" id="test${testCase.id}Status">${getStatusName(testCase.status)}</span>
                     </div>
                     <div class="test-actions">
+                      <input type="checkbox" name="" id="">
                         <button class="btn btn-sm btn-outline" onclick="runTest(${testCase.id})">Запустить</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteTestCase(${testCase.id})">
                             <i class="fas fa-trash"></i>
@@ -1017,3 +993,8 @@
         window.exportToPDF = exportToPDF;
         window.exportToCSV = exportToCSV;
         window.deleteTestRun = deleteTestRun;
+
+
+
+
+        

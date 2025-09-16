@@ -31,23 +31,23 @@
                         <button class="btn btn-primary" id="newProjectBtn">
                             <i class="fas fa-plus"></i> Новый проект
                         </button>
-                        <button class="btn btn-outline" onclick="showLandingPage()">
+                        <a class="btn btn-outline" onclick="showLandingPage()" href="dashboard.html">
                             <i class="fas fa-home"></i> На главную
-                        </button>
+                        </a>
                         <button class="btn btn-outline" id="logoutBtn">
                             <i class="fas fa-sign-out-alt"></i> Выйти
                         </button>
                     </div>
                 </nav>
+         
             </div>
         </header>
-
         <section class="hero">
             <div class="container">
                 <h1>Платформа для управления тестированием</h1>
                 <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" id="runAllTests">Запустить все тесты</button>
+                    
                     <button class="btn btn-outline" id="viewReports">Посмотреть отчеты</button>
                 </div>
             </div>
@@ -57,11 +57,11 @@
             <div class="container">
                 <div class="dashboard-header">
                     <h1 class="dashboard-title" id="dashboardTitle">Панель управления</h1>
-                    <button class="btn btn-primary" id="createTestCaseBtn">
+                    <button class="btn btn-primary hero-buttons" id="createTestCaseBtn">
                         <i class="fas fa-plus"></i> Создать тест-кейс
                     </button>
                 </div>
-                
+            
                 <div class="stats">
                     <div class="stat-card">
                         <h3>Всего тест-кейсов</h3>
@@ -201,7 +201,7 @@
                     <h2 class="modal-title">Создание нового тест-кейса</h2>
                     <button class="modal-close" id="closeTestCaseModal">&times;</button>
                 </div>
-                <form id="testCaseForm">
+                <form id="testCaseForm" class="testcaseform">
                     <div class="form-group">
                         <label for="testCaseName">Название тест-кейса</label>
                         <input type="text" id="testCaseName" required placeholder="Введите название тест-кейса">
