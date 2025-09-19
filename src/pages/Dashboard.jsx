@@ -145,10 +145,16 @@ const createTestRun = (formData) => {
   
   const { selectedTestCases, ...runData } = formData;
   
-
+  // Получаем выбранные тест-кейсы с ВСЕМИ полями
   const selectedTests = testCases.filter(test => 
     selectedTestCases.includes(test.id)
-  );
+  ).map(test => ({
+    ...test,
+    // Убедимся, что все необходимые поля присутствуют
+    errorDetails: test.errorDetails || null,
+    passed: test.passed || false,
+    status: test.status || 'not-run'
+  }));
   
   const currentProject = projects.find(p => p.id === currentProjectId);
   
@@ -164,7 +170,7 @@ const createTestRun = (formData) => {
     description: runData.description,
     type: runData.type,
     date: new Date().toLocaleString(),
-    tests: JSON.parse(JSON.stringify(selectedTests)), 
+    tests: selectedTests, // Используем подготовленные тесты
     status: 'not-run',
     passed: 0,
     failed: 0
@@ -199,60 +205,76 @@ const updateTestResult = (testRunId, testId, passed) => {
     })
   );
 };
+// Статистика по тест-ранам
+const currentProjectRuns = testRuns.filter(run => run.projectId === currentProjectId);
+const totalRuns = currentProjectRuns.length;
+const completedRuns = currentProjectRuns.filter(run => run.status === 'completed').length;
+const runningRuns = currentProjectRuns.filter(run => run.status === 'running').length;
+const notRunRuns = currentProjectRuns.filter(run => run.status === 'not-run').length;
 
+ 
 
 const runTestRun = (testRunId) => {
-  const testRun = testRuns.find(run => run.id === testRunId);
-  if (!testRun) {
-    alert("Тест-ран не найден!");
-    return;
-  }
+  setTestRuns(prevRuns =>
+    prevRuns.map(run => {
+      if (run.id !== testRunId) return run;
+      
+      // Запускаем тест-ран
+      const updatedTests = run.tests.map(test => ({
+        ...test,
+        status: 'running'
+      }));
+      
+      return { ...run, status: 'running', tests: updatedTests };
+    })
+  );
 
-  if (testRun.type === "Hand") {
-    // ДЛЯ РУЧНОГО РЕЖИМА МЕНЯЕМ СТАТУС НА running
-    setTestRuns(prev =>
-      prev.map(run =>
-        run.id === testRunId
-          ? {
-              ...run,
-              status: "running",
-              tests: run.tests.map(test => ({ ...test, status: "not-run" })),
-              passed: 0,
-              failed: 0
-            }
-          : run
-      )
-    );
-    return;
-  }
-  
+  // Имитация автоматической проверки
   setTimeout(() => {
-    setTestRuns(prev =>
-      prev.map(run => {
-        if (run.id === testRunId) {
-          const updatedTests = run.tests.map(test => {
-            const passed = Math.random() > 0.3;
-            return {
-              ...test,
-              status: "completed",
-              passed,
-              errorDetails: !passed ? errorDatabase[test.id] || null : null
-            };
-          });
+    setTestRuns(prevRuns =>
+      prevRuns.map(run => {
+        if (run.id !== testRunId) return run;
+        
+        // Генерируем случайные результаты с деталями ошибок
+        const updatedTests = run.tests.map(test => {
+          const passed = Math.random() > 0.5;
+          
           return {
-            ...run,
-            status: "completed",
-            passed: updatedTests.filter(test => test.passed).length,
-            failed: updatedTests.filter(test => !test.passed).length,
-            tests: updatedTests
+            ...test,
+            status: passed ? 'passed' : 'failed',
+            passed: passed,
+            // Добавляем детали ошибок для неудачных тестов
+            ...(!passed && {
+              errorDetails: errorDatabase[test.id] || {
+                location: "Неизвестно",
+                description: "Произошла неизвестная ошибка",
+                reason: "Причина не определена",
+                solution: "Проверить логи приложения",
+                stackTrace: "Стек вызовов недоступен",
+                logs: []
+              }
+            })
           };
-        }
-        return run;
+        });
+        
+        const passedCount = updatedTests.filter(t => t.passed).length;
+        const failedCount = updatedTests.filter(t => !t.passed).length;
+        
+        return {
+          ...run, 
+          status: 'completed', 
+          tests: updatedTests,
+          passed: passedCount,
+          failed: failedCount
+        };
       })
     );
-  }, 3000);
+  }, 2000);
 };
-
+//setTimeout(() => {
+    // const successCount = Math.floor(Math.random() * test.status(r => r.id === testRunId).tests.length);
+     //  const failedCount = test.status(r => r.id === testRunId).tests.length - successCount;})
+               
   const deleteTestRun = (testRunId) => {
     if (window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) {
       setTestRuns(testRuns.filter(run => run.id !== testRunId));
@@ -298,25 +320,31 @@ const runTestRun = (testRunId) => {
             
           </div>
         
+
+
+
           <div className="stats">
             <div className="stat-card">
               <h3>Всего тест-кейсов</h3>
               <div className="number">{totalTests}</div>
             </div>
-            <div className="stat-card">
-              <h3>Успешно пройдено</h3>
-              <div className="number">{passedTests}</div>
-            </div>
-            <div className="stat-card">
-              <h3>Провалено</h3>
-              <div className="number">{failedTests}</div>
-            </div>
-            <div className="stat-card">
-              <h3>В процессе</h3>
-              <div className="number">{inProgressTests}</div>
-            </div>
-          </div>
-          
+  <div className="stat-card">
+    <h3>Всего тест-ранов</h3>
+    <div className="number">{totalRuns}</div>
+  </div>
+  <div className="stat-card">
+    <h3>В процессе</h3>
+    <div className="number">{runningRuns}</div>
+  </div>
+  <div className="stat-card">
+    <h3>Завершено</h3>
+    <div className="number">{completedRuns}</div>
+  </div>
+  <div className="stat-card">
+    <h3>В ожидании</h3>
+    <div className="number">{notRunRuns}</div>
+  </div>
+</div>
           <div className="tabs">
             <div 
               className={`tab nav-tab ${activeTab === 'test-cases' ? 'active' : ''}`} 
@@ -534,6 +562,7 @@ const runTestRun = (testRunId) => {
                   </div>
                   <p>Процент успеха</p>
                 </div>
+                
                 <div className="stat-card">
                   <h3>Найдено багов</h3>
                   <div className="number">{failedTests}</div>
