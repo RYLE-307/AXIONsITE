@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 
-const TestRunModal = ({ onClose, onCreate }) => {
+const TestRunModal = ({ onClose, onCreate, testCases }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    type: 'Automatic', // Измените начальное значение
+    type: 'Automatic',
   });
+  const [selectedTestCases, setSelectedTestCases] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreate(formData);
+    if (selectedTestCases.length === 0) {
+      alert('Выберите хотя бы один тест-кейс для запуска');
+      return;
+    }
+    onCreate({ ...formData, selectedTestCases });
     onClose();
   };
 
@@ -18,6 +23,22 @@ const TestRunModal = ({ onClose, onCreate }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleTestCaseSelection = (testCaseId) => {
+    if (selectedTestCases.includes(testCaseId)) {
+      setSelectedTestCases(selectedTestCases.filter(id => id !== testCaseId));
+    } else {
+      setSelectedTestCases([...selectedTestCases, testCaseId]);
+    }
+  };
+
+  const selectAllTestCases = () => {
+    if (selectedTestCases.length === testCases.length) {
+      setSelectedTestCases([]);
+    } else {
+      setSelectedTestCases(testCases.map(test => test.id));
+    }
   };
 
   return (
@@ -53,7 +74,37 @@ const TestRunModal = ({ onClose, onCreate }) => {
               <option value="Automatic">Автоматический прогон</option>
               <option value="Hand">Ручной прогон</option>
             </select>
-          </div>       
+          </div>
+
+          <div className="form-group">
+            <label>Выберите тест-кейсы для запуска:</label>
+            <div className="test-cases-selection">
+              <div className="select-all">
+                <input
+                  type="checkbox"
+                  id="selectAll"
+                  checked={selectedTestCases.length === testCases.length}
+                  onChange={selectAllTestCases}
+                />
+                <label htmlFor="selectAll">Выбрать все</label>
+              </div>
+              
+              {testCases.map(testCase => (
+                <div key={testCase.id} className="test-case-checkbox">
+                  <input
+                    type="checkbox"
+                    id={`testCase-${testCase.id}`}
+                    checked={selectedTestCases.includes(testCase.id)}
+                    onChange={() => handleTestCaseSelection(testCase.id)}
+                  />
+                  <label htmlFor={`testCase-${testCase.id}`}>
+                    {testCase.name} ({testCase.type})
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          
           <div className="form-actions">
             <button type="button" className="btn btn-outline" onClick={onClose}>
               Отмена

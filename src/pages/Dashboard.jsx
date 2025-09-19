@@ -143,22 +143,28 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 const createTestRun = (formData) => {
   console.log('Creating test run with data:', formData);
   
-  const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
+  const { selectedTestCases, ...runData } = formData;
+  
+  // Фильтруем тест-кейсы по выбранным ID
+  const selectedTests = testCases.filter(test => 
+    selectedTestCases.includes(test.id)
+  );
+  
   const currentProject = projects.find(p => p.id === currentProjectId);
   
-  if (currentProjectTests.length === 0) {
-    alert('Нет тест-кейсов для создания тест-рана');
+  if (selectedTests.length === 0) {
+    alert('Нет выбранных тест-кейсов для создания тест-рана');
     return;
   }
   
   const newTestRun = {
     id: Date.now(),
     projectId: currentProjectId,
-    name: formData.name || `Тест-ран #${Date.now()} - ${currentProject.name}`,
-    description: formData.description,
-    type: formData.type,
+    name: runData.name || `Тест-ран #${Date.now()} - ${currentProject.name}`,
+    description: runData.description,
+    type: runData.type,
     date: new Date().toLocaleString(),
-    tests: JSON.parse(JSON.stringify(currentProjectTests)), // Глубокое копирование
+    tests: JSON.parse(JSON.stringify(selectedTests)), // Используем выбранные тесты
     status: 'not-run',
     passed: 0,
     failed: 0
@@ -534,11 +540,12 @@ const runTestRun = (testRunId) => {
       )}
       
 {showTestRunModal && (
-        <TestRunModal 
-          onClose={() => setShowTestRunModal(false)} 
-          onCreate={createTestRun} 
-        />
-      )}
+  <TestRunModal 
+    onClose={() => setShowTestRunModal(false)} 
+    onCreate={createTestRun}
+    testCases={currentProjectTests} // Передаем текущие тест-кейсы проекта
+  />
+)}
 
       {showReportModal && selectedTestRun && (
         <ReportModal 
