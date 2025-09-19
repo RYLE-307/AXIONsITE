@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import ProjectModal from '../components/Dashboard/ProjectModal';
 import TestCaseModal from '../components/Dashboard/TestCaseModal';
+import TestRunModal from '../components/Dashboard/TestRunModal';
 import ReportModal from '../components/Dashboard/ReportModal';
 import TestCaseItem from '../components/Dashboard/TestCaseItem';
 
@@ -23,6 +24,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
   const [testRuns, setTestRuns] = useState([]);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showTestCaseModal, setShowTestCaseModal] = useState(false);
+  const [showTestRunModal, setShowTestRunModal] = useState(false);
+
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedTestRun, setSelectedTestRun] = useState(null);
 
@@ -137,28 +140,34 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
     }
   };
 
-  const createTestRun = () => {
-    const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
-    const currentProject = projects.find(p => p.id === currentProjectId);
-    
-    if (currentProjectTests.length === 0) {
-      alert('Нет тест-кейсов для создания тест-рана');
-      return;
-    }
-    
-    const newTestRun = {
-      id: Date.now(),
-      projectId: currentProjectId,
-      name: `Тест-ран #${Date.now()} - ${currentProject.name}`,
-      date: new Date().toLocaleString(),
-      tests: JSON.parse(JSON.stringify(currentProjectTests)),
-      status: 'not-run',
-      passed: 0,
-      failed: 0
-    };
-    
-    setTestRuns([...testRuns, newTestRun]);
+// И замените её на эту:
+const createTestRun = (formData) => {
+  console.log('Creating test run with data:', formData); // Для отладки
+  
+  const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
+  const currentProject = projects.find(p => p.id === currentProjectId);
+  
+  if (currentProjectTests.length === 0) {
+    alert('Нет тест-кейсов для создания тест-рана');
+    return;
+  }
+  
+  const newTestRun = {
+    id: Date.now(),
+    projectId: currentProjectId,
+    name: formData.name || `Тест-ран #${Date.now()} - ${currentProject.name}`,
+    description: formData.description,
+    type: formData.type, // Добавляем тип из формы
+    date: new Date().toLocaleString(),
+    tests: JSON.parse(JSON.stringify(currentProjectTests)),
+    status: 'not-run',
+    passed: 0,
+    failed: 0
   };
+  
+  setTestRuns([...testRuns, newTestRun]);
+  setShowTestRunModal(false);
+};
 
   const runTestRun = (testRunId) => {
     const updatedTestRuns = testRuns.map(run => {
@@ -351,9 +360,10 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
               <p>Создавайте и запускайте тест-раны для ваших проектов:</p>
               
               <div className="controls">
-                <button className="btn btn-new-run btn-primary" onClick={createTestRun}>
-                  Создать новый тест-ран
+                <button className="btn btn-new-run btn-primary" onClick={() => setShowTestRunModal(true)}>
+                   <i className="fas fa-plus"></i> Создать тест-ран
                 </button>
+                {}
               </div>
               
               <div id="testRunsList">
@@ -365,6 +375,12 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
                       <div className="test-run-header">
                         <div className="test-run-title">{testRun.name}</div>
                         <div className="test-run-date">{testRun.date}</div>
+                        <div className="test-meta">
+             <span>  
+  {testRun.type === 'Automatic' ? 'Автоматический прогон' : 
+   testRun.type === 'Hand' ? 'Ручной прогон' : `Неизвестный тип: ${testRun.type}`}
+</span>
+              </div>
                       </div>
                       <div className="test-run-stats">
                         <div className="test-run-stat">
@@ -486,6 +502,13 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
         />
       )}
       
+{showTestRunModal && (
+        <TestRunModal 
+          onClose={() => setShowTestRunModal(false)} 
+          onCreate={createTestRun} 
+        />
+      )}
+
       {showReportModal && selectedTestRun && (
         <ReportModal 
           testRun={selectedTestRun} 
