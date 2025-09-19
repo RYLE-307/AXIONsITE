@@ -297,7 +297,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
           <div key={testCase.id} className="test-case">
             <div className="test-info">
               <h3>{testCase.name}</h3>
-              <p>{testCase.description}</p>
+              <p><strong>Описание:</strong> {testCase.description}</p>
+              <p><strong>Ожидаемы результат:</strong> {testCase.expectedResult}</p>
               <div className="test-meta">
                 <span>
                   <i className={`fas ${
@@ -319,25 +320,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
                 </span>
               </div>
             </div>
-            <div className="test-status">
-              <span className={`status-badge ${
-                testCase.status === 'passed' ? 'status-passed' :
-                testCase.status === 'failed' ? 'status-failed' :
-                testCase.status === 'running' ? 'status-running' : 'status-not-run'
-              }`}>
-                {testCase.status === 'passed' ? 'Пройден' :
-                 testCase.status === 'failed' ? 'Провален' :
-                 testCase.status === 'running' ? 'Выполняется' : 'Не запущен'}
-              </span>
-            </div>
+
             <div className="test-actions">
-              <button 
-                className="btn btn-sm btn-outline" 
-                onClick={() => runTest(testCase.id)}
-                disabled={testCase.status === 'running'}
-              >
-                Запустить
-              </button>
               <button 
                 className="btn btn-sm btn-danger" 
                 onClick={() => deleteTestCase(testCase.id)}
