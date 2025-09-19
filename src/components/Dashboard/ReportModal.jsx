@@ -55,7 +55,7 @@ const ReportModal = ({ testRun, onClose }) => {
                   {test.passed ? 'Пройден' : 'Провален'}
                 </span>
               </div>
-              <p>{test.description}</p>роиз
+              <p>{test.description}</p>
               
               {!test.passed && (
                 <div className="error-details">
