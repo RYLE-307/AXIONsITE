@@ -158,6 +158,7 @@
         }
         
         .btn-danger {
+            margin-left: auto;
             background-color: var(--danger);
             color: white;
         }
@@ -575,8 +576,10 @@
             padding: 15px;
         }
 
+
+
 .btn-show-log{
-    width: 17%
+    width: 20%
 }
 
         .modal-content {

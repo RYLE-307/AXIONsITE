@@ -550,9 +550,19 @@ const runTestRun = (testRunId) => {
                             className="btn btn-show-log btn-sm btn-primary" 
                             onClick={() => viewTestRunReport(testRun)}
                           >
-                            Просмотр отчета
+                            Просмотр авто-отчета
                           </button>
                         )}
+
+                         {testRun.status === 'completed' && (
+                          <button 
+                            className="btn btn-show-log btn-careateReport btn-primary" 
+                            onClick={() => viewTestRunReport(testRun)}
+                          >
+                            Создать отчет
+                          </button>
+                        )}
+
                         <button 
                           className="btn btn-sm btn-danger" 
                           onClick={() => deleteTestRun(testRun.id)}

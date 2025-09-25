@@ -88,6 +88,7 @@ body {
 }
 
 .btn-sm {
+  
   padding: 8px 15px;
   font-size: 14px;
 }
@@ -1124,4 +1125,15 @@ align-items:center;
   .test-actions {
     align-self: flex-end;
   }
+}
+
+.Nikname{
+  margin: auto;
+}
+
+.NameCompany{
+  font-size: 25px;
+  font-weight: bold;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: auto;
 }
