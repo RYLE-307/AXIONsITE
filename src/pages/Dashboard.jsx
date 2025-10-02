@@ -553,7 +553,7 @@ const saveManualReport = (reportData) => {
     
     <div className="category-controls">
       <button className="btn btn-primary" onClick={() => setShowCategoryModal(true)}>
-        <i className="fas fa-folder-plus"></i> Создать категорию
+        <i className="fas fa-folder-plus"></i> Создать группу кейсов
       </button>
       <button className="btn btn-outline" onClick={() => setShowTestCaseItemModal(true)}>
         <i className="fas fa-plus"></i> Создать тест-кейс

@@ -92,18 +92,7 @@ const ManualReportModal = ({ testRun, onClose, onSave }) => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="reportTester">Тестировщик</label>
-            <input 
-              type="text" 
-              id="reportTester" 
-              name="tester"
-              value={formData.tester}
-              onChange={handleChange}
-              required 
-              placeholder="Введите имя тестировщика" 
-            />
-          </div>
+        
           
           <div className="form-group">
             <label htmlFor="reportDescription">Описание тестирования</label>
