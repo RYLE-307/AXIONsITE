@@ -130,59 +130,6 @@
             cursor: pointer;
         }
         
-        .btn {
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-size: 16px;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            width: auto;
-        }
-        
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .btn-danger {
-            margin-left: auto;
-            background-color: var(--danger);
-            color: white;
-        }
-        
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 14px;
-        }
-        
-        .btn-icon {
-            padding: 8px 10px;
-            font-size: 14px;
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-        
         .hero {
             padding: 80px 0;
             text-align: center;

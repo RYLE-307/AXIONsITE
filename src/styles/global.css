@@ -70,11 +70,13 @@ body {
   background: transparent;
   border: 1px solid var(--primary);
   color: var(--primary);
+   text-decoration: none;
 }
 
 .btn-primary {
   background-color: var(--primary);
   color: white;
+  width: auto;
 }
 
 .btn-success {
@@ -85,6 +87,7 @@ body {
 .btn-danger {
   background-color: var(--danger);
   color: white;
+  margin-left: auto;
 }
 
 .btn-sm {
