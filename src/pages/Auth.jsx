@@ -71,7 +71,7 @@ return (
         id="loginForm"
         onSubmit={handleLogin}
       >
-        <h2>Вход</h2>
+        <h2 className='loginFormTitle'>Вход</h2>
         <div className="form-group">
           <label htmlFor="loginEmail">Email</label>
           <input type="email" id="loginEmail" required placeholder="Введите ваш email" />
@@ -93,7 +93,7 @@ return (
         id="registerForm"
         onSubmit={handleRegister}
       >
-        <h2>Регистрация</h2>
+        <h2 className='regiterFormTitle'>Регистрация</h2>
         
         <div className="form-group">
           <label>Тип пользователя</label>

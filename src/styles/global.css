@@ -111,12 +111,30 @@ body {
 }
 
 /* Стили для форм */
+.radio-group{
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-input{
+    width: 25px;
+    height: 25px;
+   
+}
+
+
+
+.radio-label{
+  display: flex;
+flex-direction: row;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
 
 .form-group label {
-  display: block;
+ 
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -143,6 +161,7 @@ body {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+  padding: 15px;
 }
 
 /* Стили для модальных окон */
@@ -246,6 +265,13 @@ body {
   font-size: 32px;
   margin-bottom: 15px;
   color: var(--text-primary);
+}
+
+.regiterFormTitle{
+  text-align: center;
+}
+.loginFormTitle{
+  text-align: center;
 }
 
 .welcome-subtitle {

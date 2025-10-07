@@ -523,47 +523,6 @@
             display: flex;
         }
         
- 
-        
-        .form-group {
-            margin-bottom: 20px;
-            padding: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-        
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-           
-            padding: 15px;
-        }
-
-
-
 .btn-show-log{
     width: 20%
 }
@@ -1315,8 +1274,3 @@
   animation: slideIn 0.3s ease-out;
 }
 
-.radio-input{
-    width: auto !important;
-    height: auto !important;
-    margin-right: 15% !important;
-}
