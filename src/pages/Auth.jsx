@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import '../styles/auth.css';
+
 
 const AuthPage = ({ onLogin }) => {
   const [isLoginForm, setIsLoginForm] = useState(true);
