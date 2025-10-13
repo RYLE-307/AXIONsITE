@@ -173,15 +173,15 @@ const createTestRun = (formData) => {
   const { selectedTestCases, ...runData } = formData;
   const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
   const currentProject = projects.find(p => p.id === currentProjectId);
-  // Получаем все тест-кейсы из всех групп
+
   const allTestCasesFromCategories = testCaseCategories.flatMap(category => category.testCases);
   
-  // Получаем выбранные тест-кейсы с ВСЕМИ полями
+
   const selectedTests = allTestCasesFromCategories.filter(test => 
     selectedTestCases.includes(test.id)
   ).map(test => ({
     ...test,
-    // Убедимся, что все необходимые поля присутствуют
+
     errorDetails: test.errorDetails || null,
     passed: test.passed || false,
     status: test.status || 'not-run'
@@ -201,7 +201,7 @@ const createTestRun = (formData) => {
     description: runData.description,
     type: runData.type,
     date: new Date().toLocaleString(),
-    tests: selectedTests, // Используем подготовленные тесты
+    tests: selectedTests,
     status: 'not-run',
     passed: 0,
     failed: 0
@@ -224,7 +224,7 @@ const updateTestResult = (testRunId, testId, passed) => {
         const passedCount = updatedTests.filter(t => t.passed).length;
         const failedCount = updatedTests.filter(t => t.status === "completed" && !t.passed).length;
         
-        // Также обновляем тест-кейс в группах
+    
         setTestCaseCategories(prevCategories =>
           prevCategories.map(category => ({
             ...category,
@@ -270,7 +270,6 @@ const createTestCaseCategory = (categoryData) => {
   };
   setTestCaseCategories([...testCaseCategories, newCategory]);
   
-  // Развернуть новую категорию по умолчанию
   setExpandedCategories(prev => ({
     ...prev,
     [newCategory.id]: true
@@ -279,7 +278,6 @@ const createTestCaseCategory = (categoryData) => {
   setShowCategoryModal(false);
 };
 
-// Функция создания тест-кейса внутри группы
 const createTestCaseInCategory = (testCaseData) => {
   const { categoryId, ...testCase } = testCaseData;
   
@@ -318,7 +316,6 @@ const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
   setTestCaseCategories(prevCategories => {
     const updatedCategories = [...prevCategories];
     
-    // Находим исходную группу и тест-кейс
     const fromCategory = updatedCategories.find(cat => cat.id === fromCategoryId);
     const toCategory = updatedCategories.find(cat => cat.id === toCategoryId);
     
@@ -327,7 +324,6 @@ const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
     const testCaseToMove = fromCategory.testCases.find(tc => tc.id === testCaseId);
     if (!testCaseToMove) return prevCategories;
 
-    // Удаляем из исходной группы и добавляем в целевую
     return updatedCategories.map(category => {
       if (category.id === fromCategoryId) {
         return {
@@ -346,7 +342,6 @@ const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
   });
 };
 
-// Drag and Drop handlers
 const handleDragStart = (e, testCase, categoryId) => {
   setDraggedTestCase({ ...testCase, sourceCategoryId: categoryId });
   e.dataTransfer.effectAllowed = 'move';
@@ -366,12 +361,12 @@ const handleDrop = (e, targetCategoryId) => {
 };
 
 const runTestRun = (testRunId) => {
-  // Находим тест-ран по ID
+
   const testRun = testRuns.find(run => run.id === testRunId);
   if (!testRun) return;
 
   if (testRun.type === "Hand") {
-    // Для ручного режима меняем статус на running и сбрасываем результаты
+
     setTestRuns(prev =>
       prev.map(run =>
         run.id === testRunId
@@ -407,7 +402,7 @@ const runTestRun = (testRunId) => {
         prevRuns.map(run => {
           if (run.id !== testRunId) return run;
           
-          // Генерируем случайные результаты с деталями ошибок
+          // Генерирование случайные результаты с деталями ошибок
           const updatedTests = run.tests.map(test => {
             const passed = Math.random() > 0.5;
             
@@ -415,7 +410,7 @@ const runTestRun = (testRunId) => {
               ...test,
               status: passed ? 'passed' : 'failed',
               passed: passed,
-              // Добавляем детали ошибок для неудачных тестов
+            
               ...(!passed && {
                 errorDetails: errorDatabase[test.id] || {
                   location: "Неизвестно",
@@ -443,11 +438,7 @@ const runTestRun = (testRunId) => {
       );
     }, 2000);
   }
-};
-//setTimeout(() => {
-    // const successCount = Math.floor(Math.random() * test.status(r => r.id === testRunId).tests.length);
-     //  const failedCount = test.status(r => r.id === testRunId).tests.length - successCount;})
-               
+};               
   const deleteTestRun = (testRunId) => {
     if (window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) {
       setTestRuns(testRuns.filter(run => run.id !== testRunId));
@@ -629,7 +620,6 @@ const toggleCategory = (categoryId) => {
       </div>
     </div>
 
-    {/* Показывать тест-кейсы только если категория развернута */}
     {expandedCategories[category.id] && (
       <div className="category-test-cases">
         {category.testCases.length === 0 ? (

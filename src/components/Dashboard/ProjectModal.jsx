@@ -1,4 +1,4 @@
-// components/ProjectModal.js
+
 import React, { useState } from 'react';
 
 const ProjectModal = ({ onClose, onCreate }) => {

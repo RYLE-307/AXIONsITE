@@ -96,35 +96,7 @@ return (
       >
         <h2 className='regiterFormTitle'>Регистрация</h2>
         
-        <div className="form-group">
-          <label>Тип пользователя</label>
-          <div className="radio-group">
-            <label className="radio-label">
-              <input
-              className='radio-input'
-                type="radio"
-                name="userType"
-                value="individual"
-                checked={!isLegalEntity}
-                onChange={() => setIsLegalEntity(false)}
-              /> 
-              <span className="radio-text">Физ. лицо</span>
-            </label>
-            <label className="radio-label">
-              <input
-              className='radio-input'
-                type="radio"
-                name="userType"
-                value="legal"
-                checked={isLegalEntity}
-                onChange={() => setIsLegalEntity(true)}
-              /> 
-              <span className="radio-text">Юр. лицо</span>
-            </label>
-          </div>
-        </div>
-
-        <div className="form-group">
+              <div className="form-group">
           <label htmlFor="registerName">Имя</label>
           <input type="text" id="registerName" required placeholder="Введите ваше имя" />
         </div>
@@ -140,14 +112,11 @@ return (
           <label htmlFor="registerConfirmPassword">Подтверждение пароля</label>
           <input type="password" id="registerConfirmPassword" required placeholder="Повторите пароль" />
         </div>
-
-        {isLegalEntity && (
-          <div className="form-group">
+<div className="form-group">
             <label htmlFor="registerCompany">Название компании</label>
             <input type="text" id="registerCompany" required placeholder="Введите название компании" />
           </div>
-        )}
-        
+              
         <button type="submit" className="btn btn-primary" style={{width: '100%'}}>Зарегистрироваться</button>
         <div className="form-switcher">
           Уже есть аккаунт? <span onClick={() => setIsLoginForm(true)}>Войти</span>

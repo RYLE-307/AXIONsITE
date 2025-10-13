@@ -9,12 +9,12 @@ const TestRunModal = ({ onClose, onCreate, categories }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedTestCases, setSelectedTestCases] = useState([]);
 
-  // Получаем тест-кейсы из выбранной категории
+ 
   const currentCategoryTestCases = selectedCategoryId 
     ? categories.find(cat => cat.id === parseInt(selectedCategoryId))?.testCases || []
     : [];
 
-  // Получаем все тест-кейсы для статистики "Выбрать все"
+  
   const allTestCases = categories.flatMap(category => category.testCases);
 
   const handleSubmit = (e) => {
@@ -37,7 +37,6 @@ const TestRunModal = ({ onClose, onCreate, categories }) => {
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
     setSelectedCategoryId(categoryId);
-    // Сбрасываем выбранные тест-кейсы при смене категории
     setSelectedTestCases([]);
   };
 
@@ -63,10 +62,10 @@ const TestRunModal = ({ onClose, onCreate, categories }) => {
       const allSelected = categoryTestCaseIds.every(id => selectedTestCases.includes(id));
       
       if (allSelected) {
-        // Убираем все тест-кейсы этой категории
+      
         setSelectedTestCases(selectedTestCases.filter(id => !categoryTestCaseIds.includes(id)));
       } else {
-        // Добавляем все тест-кейсы этой категории
+   
         const newSelection = [...new Set([...selectedTestCases, ...categoryTestCaseIds])];
         setSelectedTestCases(newSelection);
       }

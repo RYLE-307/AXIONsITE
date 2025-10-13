@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ReportModal = ({ testRun, onClose }) => {
-  // Защита от отсутствующих данных
+
   if (!testRun || !testRun.tests) {
     return (
       <div className="modal active">
@@ -25,7 +25,7 @@ const ReportModal = ({ testRun, onClose }) => {
   const totalTests = testRun.tests.length;
   const successRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
 
-  // Форматирование даты, если она в формате timestamp
+
   const formatDate = (date) => {
     if (!date) return 'Не указана';
     if (typeof date === 'number') {
