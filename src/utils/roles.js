@@ -6,7 +6,7 @@ export const ROLES = {
   SENIOR_ADMIN: 'senior_admin'
 };
 
-// Права доступа для каждой роли
+
 export const PERMISSIONS = {
   [ROLES.GUEST]: {
     viewProjects: true,

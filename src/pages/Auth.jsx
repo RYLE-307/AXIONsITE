@@ -122,6 +122,7 @@ const AuthPage = ({ onLogin }) => {
               <option value="senior_tester">Старший тестировщик</option>
               <option value="admin">Администратор</option>
               <option value="senior_admin">Старший администратор</option>
+              <option value="guest">гость</option>
             </select>
           </div>
               
