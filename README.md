@@ -44,6 +44,9 @@ npm start
 #### Build for production
 npm run build
 
+(sudo)npm install -g serve
+serve -s build
+
 ## 💡 Key Features
 Modular Architecture - Clear separation of components and logic
 Local State - Full functionality without backend requirements
@@ -119,6 +122,10 @@ npm start
 
 ### Сборка для production
 npm run build
+
+(sudo)npm install -g serve
+serve -s build
+
 
 ## 💡 Ключевые особенности
 Модульная архитектура - Четкое разделение компонентов и логики
