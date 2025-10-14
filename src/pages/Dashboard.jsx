@@ -275,7 +275,7 @@ const completedRuns = currentProjectRuns.filter(run => run.status === 'completed
 const runningRuns = currentProjectRuns.filter(run => run.status === 'running').length;
 const notRunRuns = currentProjectRuns.filter(run => run.status === 'not-run').length;
 
- 
+const [currentPlanId, setCurrentPlanId] = useState(null);
 const [testCaseCategories, setTestCaseCategories] = useState([]);
 const [showCategoryModal, setShowCategoryModal] = useState(false);
 const [showTestCaseItemModal, setShowTestCaseItemModal] = useState(false);
@@ -286,6 +286,8 @@ const createTestCaseCategory = (categoryData) => {
   const newCategory = {
     id: Date.now(),
     ...categoryData,
+    projectId: currentProjectId,
+    planId: currentPlanId, // Привязываем к текущему плану
     testCases: []
   };
   setTestCaseCategories([...testCaseCategories, newCategory]);
@@ -384,9 +386,14 @@ const handleDrop = (e, targetCategoryId) => {
 
 const runManualTestRun = (testRunId) => {
   const testRun = testRuns.find(run => run.id === testRunId);
-  if (!testRun) return;
+  
+  // Добавьте проверку на существование тест-кейсов
+  if (!testRun || !testRun.tests || testRun.tests.length === 0) {
+    alert('В тест-ране нет тест-кейсов для выполнения');
+    return;
+  }
 
-  // Обновляем статус тест-рана
+  // Обновите тест-кейсы с безопасными значениями по умолчанию
   setTestRuns(prev =>
     prev.map(run =>
       run.id === testRunId
@@ -396,21 +403,21 @@ const runManualTestRun = (testRunId) => {
             tests: run.tests.map(test => ({ 
               ...test, 
               status: "not-run",
-              // Добавляем шаги если их нет
-              steps: test.steps || []
+              passed: false,
+              steps: test.steps || [], // Защита от undefined
+              stepResults: test.stepResults || []
             })),
             passed: 0,
-            failed: 0
+            failed: 0,
+            startTime: new Date().toISOString()
           }
         : run
     )
   );
 
-  // Открываем модальное окно выполнения
-  setCurrentExecutingTestRun(testRun);
+  setCurrentExecutingTestRun(testRunId);
   setShowExecutionModal(true);
 };
-
 
 const runTestRun = (testRunId) => {
   const testRun = testRuns.find(run => run.id === testRunId);
@@ -488,11 +495,30 @@ const handleTestRunExecutionComplete = (executionData) => {
     );
   });
 
+  // Обновляем статус тест-рана
+  setTestRuns(prev =>
+    prev.map(run => {
+      if (run.id !== testRunId) return run;
+      
+      const allTestsCompleted = run.tests.every(test => 
+        test.status === "completed" || test.status === "passed" || test.status === "failed"
+      );
+      
+      return {
+        ...run,
+        status: allTestsCompleted ? "completed" : "running",
+        endTime: allTestsCompleted ? new Date().toISOString() : run.endTime
+      };
+    })
+  );
+
   // Закрываем модальное окно
   setShowExecutionModal(false);
   setCurrentExecutingTestRun(null);
   
-  alert('Тест-ран завершен!');
+  if (executionData.completed) {
+    alert('Тест-ран завершен!');
+  }
 };
 
   const deleteTestRun = (testRunId) => {
@@ -594,12 +620,47 @@ const handleTestExecutionComplete = (executionResult) => {
             <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
             <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
             <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
-          </div>          
+          </div>         
+           
           <div className="hero-buttons">
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
             </button>
+            
           </div>
+          <div className="plan-selector" style={{ margin: '15px 0', padding: '15px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+  <label style={{ marginRight: '10px', fontWeight: '600' }}>Тест-план:</label>
+  <select 
+    value={currentPlanId || ''} 
+    onChange={(e) => setCurrentPlanId(e.target.value ? parseInt(e.target.value) : null)}
+    style={{ 
+      background: 'var(--bg-primary)', 
+      color: 'var(--text-primary)', 
+      border: '1px solid var(--border-color)',
+      padding: '8px 12px',
+      borderRadius: '6px',
+      minWidth: '200px'
+    }}
+  >
+    <option value="">-- Без плана --</option>
+    {testPlans
+      .filter(plan => plan.projectId === currentProjectId)
+      .map(plan => (
+        <option key={plan.id} value={plan.id}>
+          {plan.name} {plan.version ? `v${plan.version}` : ''}
+        </option>
+      ))
+    }
+  </select>
+  
+  <button 
+    className="btn btn-outline" 
+    onClick={() => setShowTestPlanModal(true)}
+    style={{ marginLeft: '10px' }}
+  >
+    <i className="fas fa-plus"></i> Новый план
+  </button>
+</div>
         </div>
       </section>
 
@@ -943,11 +1004,13 @@ const handleTestExecutionComplete = (executionResult) => {
       )}
 
       {showTestPlanModal && (
-        <TestPlanModal 
-          onClose={() => setShowTestPlanModal(false)} 
-          onCreate={createTestPlan} 
-        />
-      )}
+  <TestPlanModal 
+    onClose={() => setShowTestPlanModal(false)} 
+    onCreate={createTestPlan}
+    distributions={distributions}
+    currentProjectId={currentProjectId}
+  />
+)}
 
       {showDistributionModal && (
         <DistributionModal 
@@ -956,14 +1019,16 @@ const handleTestExecutionComplete = (executionResult) => {
         />
       )}
 
-      {showExecutionModal && currentExecutingTestRun && (
-        <TestExecutionModal 
-          testRun={currentExecutingTestRun}
-          onClose={() => setShowExecutionModal(false)}
-          onComplete={handleTestRunExecutionComplete}
-        />
-      )}
-
+    {showExecutionModal && currentExecutingTestRun && (
+  <TestExecutionModal 
+    testRun={testRuns.find(run => run.id === currentExecutingTestRun)}
+    onClose={() => {
+      setShowExecutionModal(false);
+      setCurrentExecutingTestRun(null);
+    }}
+    onComplete={handleTestRunExecutionComplete}
+  />
+)}
       {showReportModal && selectedTestRun && (
         <ReportModal 
           testRun={selectedTestRun} 

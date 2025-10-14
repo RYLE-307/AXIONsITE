@@ -1,257 +1,428 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   const [currentTestCaseIndex, setCurrentTestCaseIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [stepResults, setStepResults] = useState({});
-  const [testCaseResults, setTestCaseResults] = useState({});
+  const [testResults, setTestResults] = useState({});
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [stepComment, setStepComment] = useState('');
+  const [actualResult, setActualResult] = useState('');
 
-  const currentTestCase = testRun.tests[currentTestCaseIndex];
+  // Безопасное получение тест-кейсов
+  const testCases = testRun?.tests || [];
+  const currentTestCase = testCases[currentTestCaseIndex] || {};
+  
+  // Безопасное получение шагов тест-кейса
+  const steps = currentTestCase?.steps || [];
+  const currentStep = steps[currentStepIndex] || {};
 
-  // Инициализация результатов шагов для текущего тест-кейса
-  const initializeStepResults = (testCaseId) => {
-    if (!stepResults[testCaseId] && currentTestCase.steps) {
-      setStepResults(prev => ({
-        ...prev,
-        [testCaseId]: currentTestCase.steps.map(step => ({
-          step: step.step,
-          expected: step.expected,
-          actualResult: '',
-          passed: null,
-          comments: ''
-        }))
-      }));
+  // Инициализация результатов при загрузке
+  useEffect(() => {
+    if (testCases.length > 0) {
+      const initialResults = {};
+      testCases.forEach((testCase, index) => {
+        initialResults[testCase.id] = {
+          passed: false,
+          completed: false,
+          stepResults: {}
+        };
+      });
+      setTestResults(initialResults);
     }
-  };
+  }, [testCases]);
 
-  // Инициализируем при загрузке или смене тест-кейса
-  React.useEffect(() => {
-    if (currentTestCase) {
-      initializeStepResults(currentTestCase.id);
-    }
-  }, [currentTestCase]);
+  // Сброс полей ввода при смене шага
+  useEffect(() => {
+    setStepComment('');
+    setActualResult('');
+  }, [currentStepIndex, currentTestCaseIndex]);
 
-  const handleStepResult = (testCaseId, stepIndex, field, value) => {
-    setStepResults(prev => ({
-      ...prev,
-      [testCaseId]: prev[testCaseId].map((step, idx) =>
-        idx === stepIndex ? { ...step, [field]: value } : step
-      )
-    }));
-  };
+  const handleStepResult = (passed) => {
+    if (!currentTestCase.id) return;
 
-  const handleTestCaseResult = (testCaseId, passed) => {
-    const currentStepResults = stepResults[testCaseId] || [];
-    const allStepsCompleted = currentStepResults.every(step => step.passed !== null);
-    
-    if (!allStepsCompleted) {
-      alert('Пожалуйста, заполните результаты для всех шагов перед завершением теста.');
-      return;
-    }
-
-    setTestCaseResults(prev => ({
-      ...prev,
-      [testCaseId]: {
+    const newStepResults = {
+      ...stepResults,
+      [currentStepIndex]: {
         passed,
-        stepResults: currentStepResults,
-        completedAt: new Date().toISOString()
+        step: currentStep.step || `Шаг ${currentStepIndex + 1}`,
+        expected: currentStep.expected || '',
+        actual: actualResult || (passed ? 'Соответствует ожидаемому' : 'Не соответствует ожидаемому'),
+        comment: stepComment,
+        timestamp: new Date().toISOString()
       }
-    }));
+    };
 
-    // Автоматически переходим к следующему тест-кейсу
-    if (currentTestCaseIndex < testRun.tests.length - 1) {
-      setCurrentTestCaseIndex(currentTestCaseIndex + 1);
+    setStepResults(newStepResults);
+
+    // Переход к следующему шагу или завершение тест-кейса
+    if (currentStepIndex < steps.length - 1) {
+      setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      // Все тест-кейсы завершены
-      completeTestRun();
+      // Все шаги завершены - оцениваем весь тест-кейс
+      const allStepsPassed = Object.values(newStepResults).every(step => step.passed);
+      
+      const newTestResults = {
+        ...testResults,
+        [currentTestCase.id]: {
+          passed: allStepsPassed,
+          completed: true,
+          stepResults: newStepResults
+        }
+      };
+      
+      setTestResults(newTestResults);
+      setStepResults({});
+      setCurrentStepIndex(0);
+      setStepComment('');
+      setActualResult('');
+
+      // Переход к следующему тест-кейсу или завершение
+      if (currentTestCaseIndex < testCases.length - 1) {
+        setCurrentTestCaseIndex(currentTestCaseIndex + 1);
+      } else {
+        // Все тест-кейсы завершены
+        completeTestRun(newTestResults);
+      }
     }
   };
 
-  const completeTestRun = () => {
-    const completedResults = Object.entries(testCaseResults).map(([testCaseId, result]) => ({
+  const completeTestRun = (results) => {
+    setIsExecuting(false);
+    
+    const executionResults = Object.entries(results).map(([testCaseId, result]) => ({
       testCaseId: parseInt(testCaseId),
       passed: result.passed,
-      stepResults: result.stepResults,
-      completedAt: result.completedAt
+      stepResults: result.stepResults
     }));
 
     onComplete({
       testRunId: testRun.id,
-      results: completedResults
+      results: executionResults,
+      completed: true
     });
   };
 
-  const currentStepResults = stepResults[currentTestCase?.id] || [];
+  const skipTestCase = () => {
+    if (!currentTestCase.id) return;
 
-  if (!currentTestCase) {
-    return null;
+    const newTestResults = {
+      ...testResults,
+      [currentTestCase.id]: {
+        passed: false,
+        completed: true,
+        stepResults: {},
+        skipped: true,
+        comment: 'Тест-кейс пропущен'
+      }
+    };
+
+    setTestResults(newTestResults);
+    setStepResults({});
+    setCurrentStepIndex(0);
+    setStepComment('');
+    setActualResult('');
+
+    if (currentTestCaseIndex < testCases.length - 1) {
+      setCurrentTestCaseIndex(currentTestCaseIndex + 1);
+    } else {
+      completeTestRun(newTestResults);
+    }
+  };
+
+  const getProgressPercentage = () => {
+    if (testCases.length === 0) return 0;
+    
+    const completedTests = Object.values(testResults).filter(result => result.completed).length;
+    return Math.round((completedTests / testCases.length) * 100);
+  };
+
+  const getStepProgressPercentage = () => {
+    if (steps.length === 0) return 0;
+    return Math.round(((currentStepIndex + 1) / steps.length) * 100);
+  };
+
+  // Если нет тест-кейсов для выполнения
+  if (testCases.length === 0) {
+    return (
+      <div className="modal active">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="modal-title">Выполнение тест-рана</h2>
+            <button className="modal-close" onClick={onClose}>&times;</button>
+          </div>
+          <div className="test-execution">
+            <div className="current-test-case">
+              <h3>Нет тест-кейсов для выполнения</h3>
+              <p>В этом тест-ране нет тест-кейсов для ручного выполнения.</p>
+            </div>
+            <div className="form-actions">
+              <button className="btn btn-primary" onClick={onClose}>
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="modal active">
       <div className="modal-content" style={{ maxWidth: '900px' }}>
         <div className="modal-header">
-          <h2 className="modal-title">Выполнение тест-рана: {testRun.name}</h2>
+          <h2 className="modal-title">Ручное выполнение тест-рана</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
-
+        
         <div className="test-execution">
-          {/* Прогресс по тест-кейсам */}
+          {/* Прогресс выполнения всего тест-рана */}
           <div className="test-run-progress">
             <div className="progress-info">
-              Тест-кейс {currentTestCaseIndex + 1} из {testRun.tests.length}
+              Прогресс тест-рана: {getProgressPercentage()}%
             </div>
             <div className="progress-bar">
               <div 
-                className="progress-fill"
-                style={{ width: `${((currentTestCaseIndex + 1) / testRun.tests.length) * 100}%` }}
+                className="progress-fill" 
+                style={{ width: `${getProgressPercentage()}%` }}
               ></div>
+            </div>
+            <div className="progress-info">
+              Тест-кейс {currentTestCaseIndex + 1} из {testCases.length}
             </div>
           </div>
 
-          {/* Информация о текущем тест-кейсе */}
+          {/* Текущий тест-кейс */}
           <div className="current-test-case">
-            <h3>{currentTestCase.name}</h3>
+            <h3>{currentTestCase.name || `Тест-кейс ${currentTestCaseIndex + 1}`}</h3>
             {currentTestCase.description && (
               <p className="test-case-description">{currentTestCase.description}</p>
             )}
-            <div className="test-case-meta">
-              <span className={`priority-${currentTestCase.priority}`}>
-                Приоритет: {currentTestCase.priority === 'high' ? 'Высокий' : 
-                         currentTestCase.priority === 'medium' ? 'Средний' : 'Низкий'}
-              </span>
-              <span className={`type-${currentTestCase.type}`}>
-                Тип: {currentTestCase.type === 'functional' ? 'Функциональный' : 
-                      currentTestCase.type === 'api' ? 'API' : 
-                      currentTestCase.type === 'performance' ? 'Производительность' : 'UI'}
-              </span>
-            </div>
-          </div>
+            
+            {/* Прогресс шагов текущего тест-кейса */}
+            {steps.length > 0 && (
+              <div className="steps-progress">
+                <div className="progress-info">
+                  Шаг {currentStepIndex + 1} из {steps.length} ({getStepProgressPercentage()}%)
+                </div>
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${getStepProgressPercentage()}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
 
-          {/* Шаги тестирования */}
-          <div className="test-steps">
-            <h4>Шаги тестирования:</h4>
-            {currentTestCase.steps && currentTestCase.steps.map((step, stepIndex) => (
-              <div key={stepIndex} className="test-step">
+            {/* Текущий шаг */}
+            {steps.length > 0 ? (
+              <div className="test-step">
                 <div className="step-header">
-                  <strong>Шаг {stepIndex + 1}: {step.step}</strong>
+                  <h4>Шаг {currentStepIndex + 1}: {currentStep.step || 'Действие не указано'}</h4>
                 </div>
-                <div className="step-expected">
-                  <strong>Ожидаемый результат:</strong> {step.expected}
-                </div>
+                
+                {currentStep.expected && (
+                  <div className="step-expected">
+                    <strong>Ожидаемый результат:</strong> {currentStep.expected}
+                  </div>
+                )}
 
                 <div className="step-execution">
+                  {/* Поле для ввода фактического результата */}
                   <div className="form-group">
-                    <label>Фактический результат:</label>
+                    <label htmlFor="actualResult">Фактический результат:</label>
                     <textarea 
-                      value={currentStepResults[stepIndex]?.actualResult || ''}
-                      onChange={(e) => handleStepResult(
-                        currentTestCase.id, 
-                        stepIndex, 
-                        'actualResult', 
-                        e.target.value
-                      )}
-                      placeholder="Опишите фактический результат выполнения шага"
+                      id="actualResult"
+                      value={actualResult}
+                      onChange={(e) => setActualResult(e.target.value)}
+                      placeholder="Опишите фактический результат выполнения шага..."
                       rows="3"
+                      style={{ width: '100%', resize: 'vertical' }}
                     />
                   </div>
 
+                  {/* Поле для комментариев */}
                   <div className="form-group">
-                    <label>Комментарии:</label>
+                    <label htmlFor="stepComment">Комментарий к шагу (необязательно):</label>
                     <textarea 
-                      value={currentStepResults[stepIndex]?.comments || ''}
-                      onChange={(e) => handleStepResult(
-                        currentTestCase.id, 
-                        stepIndex, 
-                        'comments', 
-                        e.target.value
-                      )}
-                      placeholder="Дополнительные комментарии к шагу"
+                      id="stepComment"
+                      value={stepComment}
+                      onChange={(e) => setStepComment(e.target.value)}
+                      placeholder="Добавьте комментарии, замечания или примечания..."
                       rows="2"
+                      style={{ width: '100%', resize: 'vertical' }}
                     />
                   </div>
 
+                  <p>Оцените результат выполнения шага:</p>
+                  
                   <div className="step-actions">
                     <button 
-                      className={`btn ${currentStepResults[stepIndex]?.passed === false ? 'btn-danger' : 'btn-outline'}`}
-                      onClick={() => handleStepResult(currentTestCase.id, stepIndex, 'passed', false)}
+                      className="btn btn-success"
+                      onClick={() => handleStepResult(true)}
+                      disabled={!actualResult.trim()} // Требуем заполнения фактического результата
                     >
-                      Шаг не пройден
+                      <i className="fas fa-check"></i> Шаг выполнен успешно
                     </button>
                     <button 
-                      className={`btn ${currentStepResults[stepIndex]?.passed === true ? 'btn-success' : 'btn-outline'}`}
-                      onClick={() => handleStepResult(currentTestCase.id, stepIndex, 'passed', true)}
+                      className="btn btn-danger"
+                      onClick={() => handleStepResult(false)}
+                      disabled={!actualResult.trim()} // Требуем заполнения фактического результата
                     >
-                      Шаг пройден
+                      <i className="fas fa-times"></i> Шаг не выполнен
                     </button>
                   </div>
 
-                  {/* Статус шага */}
-                  {currentStepResults[stepIndex]?.passed !== null && (
-                    <div className={`step-status ${currentStepResults[stepIndex]?.passed ? 'passed' : 'failed'}`}>
-                      Статус: {currentStepResults[stepIndex]?.passed ? 'Пройден' : 'Не пройден'}
-                    </div>
+                  {!actualResult.trim() && (
+                    <p style={{ color: 'var(--warning)', fontSize: '14px', marginTop: '10px' }}>
+                      * Пожалуйста, опишите фактический результат перед оценкой шага
+                    </p>
                   )}
                 </div>
               </div>
-            ))}
+            ) : (
+              <div className="test-step">
+                <p>Этот тест-кейс не содержит детальных шагов.</p>
+                
+                {/* Поля для тест-кейса без шагов */}
+                <div className="form-group">
+                  <label htmlFor="actualResult">Фактический результат тестирования:</label>
+                  <textarea 
+                    id="actualResult"
+                    value={actualResult}
+                    onChange={(e) => setActualResult(e.target.value)}
+                    placeholder="Опишите фактический результат выполнения тест-кейса..."
+                    rows="3"
+                    style={{ width: '100%', resize: 'vertical' }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="stepComment">Комментарий к тест-кейсу (необязательно):</label>
+                  <textarea 
+                    id="stepComment"
+                    value={stepComment}
+                    onChange={(e) => setStepComment(e.target.value)}
+                    placeholder="Добавьте комментарии, замечания или примечания..."
+                    rows="2"
+                    style={{ width: '100%', resize: 'vertical' }}
+                  />
+                </div>
+
+                <p>Выполните тестирование согласно описанию и оцените результат:</p>
+                
+                <div className="step-actions">
+                  <button 
+                    className="btn btn-success"
+                    onClick={() => handleStepResult(true)}
+                    disabled={!actualResult.trim()}
+                  >
+                    <i className="fas fa-check"></i> Тест-кейс пройден
+                  </button>
+                  <button 
+                    className="btn btn-danger"
+                    onClick={() => handleStepResult(false)}
+                    disabled={!actualResult.trim()}
+                  >
+                    <i className="fas fa-times"></i> Тест-кейс не пройден
+                  </button>
+                </div>
+
+                {!actualResult.trim() && (
+                  <p style={{ color: 'var(--warning)', fontSize: '14px', marginTop: '10px' }}>
+                    * Пожалуйста, опишите фактический результат перед оценкой тест-кейса
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Навигация и завершение тест-кейса */}
+          {/* Навигация и управление */}
           <div className="execution-navigation">
-            <button 
-              className="btn btn-outline" 
-              onClick={() => setCurrentTestCaseIndex(Math.max(0, currentTestCaseIndex - 1))}
-              disabled={currentTestCaseIndex === 0}
-            >
-              Предыдущий тест-кейс
-            </button>
-
             <div className="test-case-completion">
               <button 
-                className="btn btn-danger"
-                onClick={() => handleTestCaseResult(currentTestCase.id, false)}
+                className="btn btn-outline"
+                onClick={skipTestCase}
+                disabled={currentTestCaseIndex === testCases.length - 1 && steps.length === 0}
               >
-                Тест-кейс провален
+                <i className="fas fa-forward"></i> Пропустить тест-кейс
               </button>
+            </div>
+            
+            <div className="completion-actions">
               <button 
-                className="btn btn-success"
-                onClick={() => handleTestCaseResult(currentTestCase.id, true)}
+                className="btn btn-outline"
+                onClick={onClose}
               >
-                Тест-кейс пройден
+                <i className="fas fa-times"></i> Прервать выполнение
               </button>
             </div>
-
-            <button 
-              className="btn btn-outline" 
-              onClick={() => setCurrentTestCaseIndex(Math.min(testRun.tests.length - 1, currentTestCaseIndex + 1))}
-              disabled={currentTestCaseIndex === testRun.tests.length - 1}
-            >
-              Следующий тест-кейс
-            </button>
           </div>
 
-          {/* Обзор прогресса */}
+          {/* Обзор выполнения */}
           <div className="execution-overview">
-            <h5>Прогресс выполнения:</h5>
+            <h4>Обзор выполнения:</h4>
             <div className="test-cases-overview">
-              {testRun.tests.map((testCase, index) => (
-                <div 
-                  key={testCase.id}
-                  className={`test-case-overview ${index === currentTestCaseIndex ? 'current' : ''} ${
-                    testCaseResults[testCase.id] ? 
-                    (testCaseResults[testCase.id].passed ? 'passed' : 'failed') : 'pending'
-                  }`}
-                  onClick={() => setCurrentTestCaseIndex(index)}
-                >
-                  <span>{index + 1}. {testCase.name}</span>
-                  <span className="test-case-status">
-                    {testCaseResults[testCase.id] ? 
-                     (testCaseResults[testCase.id].passed ? '✓' : '✗') : '○'}
-                  </span>
-                </div>
-              ))}
+              {testCases.map((testCase, index) => {
+                const result = testResults[testCase.id];
+                const status = result?.completed 
+                  ? (result.passed ? 'passed' : 'failed')
+                  : (index === currentTestCaseIndex ? 'current' : 'pending');
+                
+                return (
+                  <div 
+                    key={testCase.id} 
+                    className={`test-case-overview ${status}`}
+                    onClick={() => {
+                      if (index < currentTestCaseIndex) {
+                        setCurrentTestCaseIndex(index);
+                        setCurrentStepIndex(0);
+                        setStepResults({});
+                        setStepComment('');
+                        setActualResult('');
+                      }
+                    }}
+                  >
+                    <span>{testCase.name || `Тест-кейс ${index + 1}`}</span>
+                    <span className="test-case-status">
+                      {status === 'current' && 'Текущий'}
+                      {status === 'passed' && 'Пройден'}
+                      {status === 'failed' && 'Провален'}
+                      {status === 'pending' && 'Ожидание'}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
+
+          {/* История выполненных шагов текущего тест-кейса */}
+          {Object.keys(stepResults).length > 0 && (
+            <div className="step-history">
+              <h4>Выполненные шаги текущего тест-кейса:</h4>
+              <div className="step-history-list">
+                {Object.entries(stepResults)
+                  .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                  .map(([stepIndex, result]) => (
+                    <div key={stepIndex} className={`step-history-item ${result.passed ? 'passed' : 'failed'}`}>
+                      <div className="step-history-header">
+                        <strong>Шаг {parseInt(stepIndex) + 1}: {result.step}</strong>
+                        <span className={`status-badge ${result.passed ? 'status-passed' : 'status-failed'}`}>
+                          {result.passed ? 'Успех' : 'Провал'}
+                        </span>
+                      </div>
+                      <div className="step-history-details">
+                        <p><strong>Ожидаемый:</strong> {result.expected}</p>
+                        <p><strong>Фактический:</strong> {result.actual}</p>
+                        {result.comment && (
+                          <p><strong>Комментарий:</strong> {result.comment}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

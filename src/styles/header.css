@@ -85,16 +85,18 @@ header {
 }
 
 .Nikname {
-  margin: auto;
+  padding-top: 2%;
+  font-size: 18px;
+  margin-right: 3rem;
   color: var(--text-primary);
   font-weight: 500;
 }
 
 .NameCompany {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: auto;
+margin-right: 7em;
   color: var(--text-primary);
 }
 
@@ -125,12 +127,14 @@ header {
     min-width: 150px;
   }
   
-  .NameCompany {
-    font-size: 16px;
-  }
+ 
   
   .btn-header {
     width: 100%;
     margin-top: 10px;
   }
+}
+
+.profile{
+  display: flex;
 }

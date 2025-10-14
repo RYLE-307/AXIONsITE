@@ -2,7 +2,6 @@ import React from 'react';
 import '../styles/global.css';
 import '../styles/header.css';
 
-
 const Header = ({ 
   currentUser, 
   onLogout, 
@@ -43,21 +42,29 @@ const Header = ({
             >
               <i className="fas fa-plus"></i> Новый проект
             </button>
-          
           </div>
-          <p className="NameCompany">
-</p>
-<p className="Nikname">
-  {currentUser && (
-    <span><strong>{currentUser.username || currentUser.name}</strong></span>
-  )}
-</p>
-            <button className="btn btn-header btn-outline" onClick={onLogout}>
-              <i className="fas fa-sign-out-alt"></i> Выйти
-            </button>
+          
+          {/* Исправленное отображение информации о пользователе */}
+          <div className="user-info">
+            {currentUser && (
+              <div className='profile'>
+                <p className="NameCompany">
+                  <span><strong>{currentUser.username || currentUser.name}</strong></span>
+                </p>
+                <p className="Nikname">
+                  <span><strong>{currentUser.company}</strong></span>
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <button className="btn btn-header btn-outline" onClick={onLogout}>
+            <i className="fas fa-sign-out-alt"></i> Выйти
+          </button>
         </nav>
       </div>
     </header>
   );
 };
+
 export default Header;
