@@ -60,7 +60,7 @@ const AuthPage = ({ onLogin }) => {
         </a>
         
         <div className="welcome-logo">
-          <img src="/logo_dark.svg" alt="" />
+          <img className='logo logo_auth' src="/logo_dark.svg" alt="" />
         </div>
         <h1 className="welcome-title">Добро пожаловать в AxionLabs</h1>
         <p className="welcome-subtitle">Платформа для управления тестированием</p>

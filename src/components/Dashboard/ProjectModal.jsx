@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 
-const ProjectModal = ({ onClose, onCreate, distributions = [] }) => { // Добавьте distributions в пропсы
+const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     environment: 'разработка',
     environment1: 'QWA',
-    selectedDistributions: [] // Добавьте начальное значение
+    selectedDistributions: []
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onCreate(formData);
+    setLoading(true);
+    
+    try {
+      await onCreate(formData);
+    } catch (err) {
+      console.error('Error creating project:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDistributionChange = (distroId) => {

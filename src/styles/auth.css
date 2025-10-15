@@ -8,6 +8,10 @@
   padding: 20px;
 }
 
+.logo_auth {
+ margin-right: auto;
+ margin-left: auto;
+}
 .welcome-container {
   background-color: var(--bg-secondary);
   border-radius: 10px;

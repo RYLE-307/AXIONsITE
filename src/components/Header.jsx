@@ -1,8 +1,7 @@
 import React from 'react';
 import '../styles/global.css';
 import '../styles/header.css';
-import { getRoleDisplayName } from '../utils/roles'; // Импортируем из utils
-
+import { getRoleDisplayName } from '../utils/roles';
 
 const Header = ({ 
   currentUser, 
@@ -13,64 +12,80 @@ const Header = ({
   currentProjectId, 
   setCurrentProjectId, 
   setShowProjectModal,
-  canCreateProject
+  canCreateProject 
 }) => {
+  const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
 
-   const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
   return (
-    <header>
+    <header className="header">
       <div className="container">
         <nav className="navbar">
-       
+          {/* Логотип и название */}
           <a href="/dashboard" className="logo">
-          <img src={logoPath} alt="AxionLabs Logo" /> AxionLabs
+            <img src={logoPath} alt="AxionLabs Logo" className="logo__image" />
+            <span className="logo__text">AxionLabs</span>
           </a>
           
-          <div className="auth-buttons">
-            <button className="theme-toggle" onClick={toggleTheme}>
+          {/* Элементы управления */}
+          <div className="navbar__controls">
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Переключить тему">
               <i className={theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}></i>
             </button>
-            <div className="project-selector">
-              <select 
-                value={currentProjectId} 
-                onChange={(e) => setCurrentProjectId(parseInt(e.target.value))}
-              >
-                {projects.map(project => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            
+            {/* Селектор проектов */}
+            {projects && projects.length > 0 && (
+              <div className="project-selector">
+                <select 
+                  value={currentProjectId || ''} 
+                  onChange={(e) => setCurrentProjectId(parseInt(e.target.value))}
+                  className="project-selector__dropdown"
+                >
+                  <option value="">Выберите проект</option>
+                  {projects.map(project => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            
+            {/* Кнопка создания проекта */}
             {canCreateProject && (
               <button 
-                className="btn btn-primary" 
+                className="btn btn--primary" 
                 onClick={() => setShowProjectModal(true)}
               >
-                <i className="fas fa-plus"></i> Новый проект
+                <i className="fas fa-plus"></i>
+                <span>Новый проект</span>
               </button>
             )}
           </div>
           
+          {/* Информация о пользователе */}
           <div className="user-info">
             {currentUser && (
-              <div className='profile'>
-                <p className="NameCompany">
-                  <span><strong>{currentUser.username || currentUser.name}</strong></span>
-                </p>
-                <p className="Nikname">
-                  <span><strong>{currentUser.company}</strong></span>
-                </p>
-                <p className="UserRole" style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              <div className="user-profile">
+                <div className="user-profile__main">
+                  <span className="user-profile__name">
+                    {currentUser.username || currentUser.name}
+                  </span>
+                  <span className="user-profile__company">
+                    {currentUser.company}
+                  </span>
+                </div>
+                <div className="user-profile__role">
                   {getRoleDisplayName(currentUser.role)}
-                </p>
+                </div>
               </div>
             )}
+            
+            {/* Кнопка выхода */}
+            <button className="btn btn--outline" onClick={onLogout}>
+              <i className="fas fa-sign-out-alt"></i>
+              <span>Выйти</span>
+            </button>
           </div>
-          
-          <button className="btn btn-header btn-outline" onClick={onLogout}>
-            <i className="fas fa-sign-out-alt"></i> Выйти
-          </button>
         </nav>
       </div>
     </header>
