@@ -716,10 +716,14 @@ const handleTestExecutionComplete = (executionResult) => {
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
             </button>
-            
+            <button className="btn btn-outline" onClick={() => setShowDistributionModal(true)}>
+                  <i className="fas fa-server"></i> Управление дистрибутивами
+                </button>
           </div>
           <div className="plan-selector" style={{ margin: '15px 0', padding: '15px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+  
   <label style={{ marginRight: '10px', fontWeight: '600' }}>Тест-план:</label>
+  
   <select 
     value={currentPlanId || ''} 
     onChange={(e) => setCurrentPlanId(e.target.value ? parseInt(e.target.value) : null)}
@@ -732,6 +736,7 @@ const handleTestExecutionComplete = (executionResult) => {
       minWidth: '200px'
     }}
   >
+    
     <option value="">-- Без плана --</option>
     {testPlans
       .filter(plan => plan.projectId === currentProjectId)
@@ -812,12 +817,7 @@ const handleTestExecutionComplete = (executionResult) => {
               <p>Создавайте группы и управляйте тест-кейсами:</p>
               
               <div className="category-controls">
-                <button className="btn btn-primary" onClick={() => setShowTestPlanModal(true)}>
-                  <i className="fas fa-clipboard-list"></i> Создать тест-план
-                </button>
-                <button className="btn btn-outline" onClick={() => setShowDistributionModal(true)}>
-                  <i className="fas fa-server"></i> Управление дистрибутивами
-                </button>
+                              
                 <button className="btn btn-primary" onClick={() => setShowCategoryModal(true)}>
                   <i className="fas fa-folder-plus"></i> Создать группу кейсов
                 </button>

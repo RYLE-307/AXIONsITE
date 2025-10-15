@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/header.css';
 import { getRoleDisplayName } from '../utils/roles'; // Импортируем из utils
 
+
 const Header = ({ 
   currentUser, 
   onLogout, 
@@ -14,12 +15,15 @@ const Header = ({
   setShowProjectModal,
   canCreateProject
 }) => {
+
+   const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
   return (
     <header>
       <div className="container">
         <nav className="navbar">
+       
           <a href="/dashboard" className="logo">
-            <i className="fas fa-bug"></i> AxionLabs
+          <img src={logoPath} alt="AxionLabs Logo" /> AxionLabs
           </a>
           
           <div className="auth-buttons">

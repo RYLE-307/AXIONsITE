@@ -8,14 +8,14 @@ const LandingPage = ({ theme, toggleTheme }) => {
     alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.');
     e.target.reset();
   };
-
+const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
   return (
     <div className="landing-page">
       <header className="landing-header">
         <div className="container">
           <nav className="landing-nav">
             <a href="#" className="landing-logo">
-              <i className="fas fa-bug"></i> AxionLabs
+               <img src={logoPath} alt="AxionLabs Logo" />  AxionLabs
             </a>
             <div className="landing-auth">
               <button className="theme-toggle" onClick={toggleTheme}>
