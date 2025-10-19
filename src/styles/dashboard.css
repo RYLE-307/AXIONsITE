@@ -1,9 +1,9 @@
-/* Стили для Dashboard */
+
 .main-content {
   min-height: 100vh;
 }
 
-/* Header & Navigation */
+
 header {
   background-color: var(--bg-secondary);
   box-shadow: 0 2px 10px var(--shadow-color);
@@ -94,11 +94,12 @@ header {
   height: 4em;
 }
 
-/* Hero Section Dashboard */
+
 .hero {
   padding: 60px 0;
   text-align: center;
 }
+
 
 .container_title {
   line-height: 2;
@@ -132,7 +133,7 @@ header {
   font-size: 18px;
 }
 
-/* Dashboard Styles */
+
 .dashboard {
   padding: 50px 0;
 }
@@ -142,6 +143,15 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+}
+
+/* Center titles in tab header when inside tab-content */
+.tab-content .dashboard-header {
+  justify-content: center;
+}
+
+.tab-content .dashboard-header h2 {
+  text-align: center;
 }
 
 .dashboard-title {
@@ -185,7 +195,93 @@ header {
   display: block;
 }
 
-/* Stats */
+/* Improved styling for tab content area */
+.tab-content {
+  background: var(--bg-secondary);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.tabs .tab {
+  background: transparent;
+  margin-right: 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+.tabs .tab.active {
+  background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+  color: var(--primary);
+  border-bottom-color: transparent;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Test-case categories: make columns responsive and add padding */
+.test-case-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Ensure empty-state inside the categories grid spans full width and centers */
+.test-case-categories > .empty-state {
+  grid-column: 1 / -1;
+  justify-self: center;
+  align-self: center;
+  text-align: center;
+}
+
+.test-case-category {
+  padding: 18px;
+}
+
+/* Test-run cards improvements */
+.test-run {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.test-run-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.test-run-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.test-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.test-run .btn {
+  min-width: 110px;
+}
+
+@media (max-width: 768px) {
+  .tab-content {
+    padding: 12px;
+  }
+  .test-case-categories {
+    grid-template-columns: 1fr;
+  }
+  .test-run {
+    padding: 12px;
+  }
+}
+
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -219,7 +315,7 @@ header {
   color: var(--primary);
 }
 
-/* Test Cases */
+
 .test-cases {
   display: grid;
   grid-template-columns: 1fr;
@@ -308,7 +404,54 @@ header {
   gap: 10px;
 }
 
-/* Test Results */
+/* User list styles */
+.user-list h4 {
+  margin-bottom: 12px;
+}
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  gap: 12px;
+}
+.user-item + .user-item { margin-top: 10px; }
+.user-item-left { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--primary); color: white; display:flex; align-items:center; justify-content:center;
+  font-weight:700;
+}
+.user-info { display:flex; flex-direction:column; }
+.user-name-email { display:flex; flex-direction:column; }
+.user-email { font-size: 13px; color: var(--text-secondary); }
+.user-meta { margin-top: 6px; }
+.user-role.badge { background: var(--bg-tertiary); padding: 4px 8px; border-radius: 12px; font-size: 12px; }
+.user-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.user-projects { font-size: 13px; color: var(--text-secondary); }
+.user-actions .btn { min-width: 90px; }
+
+/* Distribution cards */
+.dist-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.dist-card { display:flex; justify-content:space-between; align-items:flex-start; padding:12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-secondary); }
+.dist-main { display:flex; flex-direction:column; gap:6px; }
+.dist-name { font-weight:700; font-size:15px; }
+.dist-version { font-weight:500; color: var(--text-secondary); margin-left:6px; font-size:13px; }
+.dist-type { font-size:12px; color: var(--text-secondary); }
+.dist-desc { font-size:13px; color: var(--text-secondary); }
+.dist-actions { display:flex; gap:8px; }
+.dist-card--selectable { cursor: pointer; padding:10px; }
+.dist-card--selectable input[type="checkbox"] { margin-right:8px; }
+
+@media (max-width: 600px) {
+  .user-item { flex-direction: column; align-items: stretch; }
+  .user-item-right { align-items: flex-start; }
+}
+
+
 .test-results {
   background-color: var(--bg-secondary);
   border-radius: 8px;
@@ -319,6 +462,81 @@ header {
 
 .test-results h3 {
   margin-bottom: 15px;
+}
+
+/* Empty state messaging: center and constrain width so messages don't stretch */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+}
+
+.empty-state > * {
+  max-width: 720px;
+  text-align: center;
+}
+
+.empty-category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-category p, .empty-state p {
+  margin: 8px 0;
+}
+
+/* Make headings and descriptions in empty states more prominent and consistent */
+.empty-state h3, .empty-category h3 {
+  font-size: 1.4rem;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.empty-state p, .empty-category p {
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+/* Center and size buttons inside empty state blocks */
+.empty-state .btn,
+.empty-category .btn {
+  display: inline-block;
+  min-width: 160px;
+  padding: 10px 16px;
+  margin-top: 14px;
+}
+
+.empty-state .btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+/* Ensure the button group inside the empty-state does not stretch the parent */
+.empty-state > * .btn-group {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Small screens: make buttons full width for easier tapping */
+@media (max-width: 480px) {
+  .empty-state .btn,
+  .empty-category .btn {
+    width: 100%;
+    min-width: 0;
+  }
+  .empty-state .btn-group {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .result-content {
@@ -371,7 +589,7 @@ header {
   margin-top: 30px;
 }
 
-/* Test Runs */
+
 .test-run {
   background-color: var(--bg-secondary);
   border-radius: 8px;
@@ -424,7 +642,7 @@ header {
   color: var(--text-secondary);
 }
 
-/* Кнопки Dashboard */
+
 .btn-add-test {
   margin-left: 35%;
   margin-top: 15px;
@@ -444,7 +662,7 @@ header {
   width: auto;
 }
 
-/* Manual Controls */
+
 .manual-controls {
   margin-top: 20px;
   padding: 15px;
@@ -515,7 +733,7 @@ header {
   margin-left: 15px;
 }
 
-/* Category System */
+
 .category-controls {
   display: flex;
   gap: 15px;
@@ -650,6 +868,46 @@ header {
 .test-case-item:hover {
   border-color: var(--primary-light);
   transform: translateY(5px);
+}
+
+/* Make test-case items visually consistent with test-run cards */
+.test-case-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--bg-secondary);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+}
+
+.test-case-content h4 {
+  font-size: 16px;
+  margin: 0 0 6px 0;
+}
+
+.test-case-content p {
+  margin: 0 0 8px 0;
+  color: var(--text-secondary);
+}
+
+.test-case-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.test-case-item .btn {
+  min-width: 100px;
+}
+
+@media (max-width: 768px) {
+  .test-case-item {
+    padding: 12px;
+  }
+  .test-case-actions {
+    justify-content: flex-start;
+  }
 }
 
 .test-case-item.dragging {
@@ -819,7 +1077,28 @@ header {
   margin-right: 8px;
 }
 
-/* Responsive Design для Dashboard */
+.btn-test-case {
+  margin-top: 15px;
+  width: 100%;
+}
+
+
+.btn-test-group{
+margin-top: 15px;
+ margin-right: auto;
+ margin-left: auto;
+
+}
+
+.role-banner-container{
+   display: flex;
+   justify-content: space-between; 
+   align-items: center
+}
+
+.manual-reports{
+  margin-top: 30px
+}
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -1158,7 +1437,18 @@ header {
   font-weight: bold;
 }
 
-/* Стили для истории шагов */
+
+.loading .access-denied{
+   text-align: center;
+    padding: 50px 
+}
+
+.role-banner{
+    background: var(--bg-tertiary);
+        padding: 10px 0;
+       border-bottom: 1px solid var(--border-color)
+}
+
 .step-history {
   margin-top: 30px;
   padding: 20px;
@@ -1199,7 +1489,7 @@ header {
   margin: 5px 0;
 }
 
-/* Стили для полей ввода в шагах */
+
 .step-execution .form-group {
   margin-bottom: 15px;
 }
@@ -1227,3 +1517,211 @@ header {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
 }
+
+/* DistributionModal specific styles moved from JSX inline styles */
+.dist-list-wrapper {
+  margin-bottom: 15px;
+}
+
+.dist-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.dist-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.dist-meta {
+  color: var(--text-secondary);
+}
+
+/* Modal width variants */
+.modal-content--wide {
+  max-width: 900px;
+}
+
+.modal-content--narrow {
+  max-width: 800px;
+}
+
+/* Progress fill uses CSS variable --w set from JS */
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 5px;
+  transition: width 0.5s ease-in-out;
+  width: var(--w, 0%);
+}
+
+/* Full width textareas with vertical resize */
+.full-width-resize {
+  width: 100%;
+  resize: vertical;
+}
+
+.warning-note {
+  color: var(--warning);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.distro-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: 8px;
+}
+
+.form-group--flex {
+  flex: 1;
+}
+
+.btn--spaced {
+  margin-top: 10px;
+}
+
+/* Plan selector boxed style */
+.plan-selector--boxed {
+  margin: 15px 0;
+  padding: 15px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-selector__label {
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.plan-selector__select {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 6px;
+  min-width: 200px;
+}
+
+.btn--ml {
+  margin-left: 10px;
+}
+
+.category-info--clickable {
+  cursor: pointer;
+  flex: 1;
+}
+
+.chev-icon {
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+/* Width utilities for progress bars (0%..100%) */
+.w-0 { width: 0%; }
+.w-1 { width: 1%; }
+.w-2 { width: 2%; }
+.w-3 { width: 3%; }
+.w-4 { width: 4%; }
+.w-5 { width: 5%; }
+.w-6 { width: 6%; }
+.w-7 { width: 7%; }
+.w-8 { width: 8%; }
+.w-9 { width: 9%; }
+.w-10 { width: 10%; }
+.w-11 { width: 11%; }
+.w-12 { width: 12%; }
+.w-13 { width: 13%; }
+.w-14 { width: 14%; }
+.w-15 { width: 15%; }
+.w-16 { width: 16%; }
+.w-17 { width: 17%; }
+.w-18 { width: 18%; }
+.w-19 { width: 19%; }
+.w-20 { width: 20%; }
+.w-21 { width: 21%; }
+.w-22 { width: 22%; }
+.w-23 { width: 23%; }
+.w-24 { width: 24%; }
+.w-25 { width: 25%; }
+.w-26 { width: 26%; }
+.w-27 { width: 27%; }
+.w-28 { width: 28%; }
+.w-29 { width: 29%; }
+.w-30 { width: 30%; }
+.w-31 { width: 31%; }
+.w-32 { width: 32%; }
+.w-33 { width: 33%; }
+.w-34 { width: 34%; }
+.w-35 { width: 35%; }
+.w-36 { width: 36%; }
+.w-37 { width: 37%; }
+.w-38 { width: 38%; }
+.w-39 { width: 39%; }
+.w-40 { width: 40%; }
+.w-41 { width: 41%; }
+.w-42 { width: 42%; }
+.w-43 { width: 43%; }
+.w-44 { width: 44%; }
+.w-45 { width: 45%; }
+.w-46 { width: 46%; }
+.w-47 { width: 47%; }
+.w-48 { width: 48%; }
+.w-49 { width: 49%; }
+.w-50 { width: 50%; }
+.w-51 { width: 51%; }
+.w-52 { width: 52%; }
+.w-53 { width: 53%; }
+.w-54 { width: 54%; }
+.w-55 { width: 55%; }
+.w-56 { width: 56%; }
+.w-57 { width: 57%; }
+.w-58 { width: 58%; }
+.w-59 { width: 59%; }
+.w-60 { width: 60%; }
+.w-61 { width: 61%; }
+.w-62 { width: 62%; }
+.w-63 { width: 63%; }
+.w-64 { width: 64%; }
+.w-65 { width: 65%; }
+.w-66 { width: 66%; }
+.w-67 { width: 67%; }
+.w-68 { width: 68%; }
+.w-69 { width: 69%; }
+.w-70 { width: 70%; }
+.w-71 { width: 71%; }
+.w-72 { width: 72%; }
+.w-73 { width: 73%; }
+.w-74 { width: 74%; }
+.w-75 { width: 75%; }
+.w-76 { width: 76%; }
+.w-77 { width: 77%; }
+.w-78 { width: 78%; }
+.w-79 { width: 79%; }
+.w-80 { width: 80%; }
+.w-81 { width: 81%; }
+.w-82 { width: 82%; }
+.w-83 { width: 83%; }
+.w-84 { width: 84%; }
+.w-85 { width: 85%; }
+.w-86 { width: 86%; }
+.w-87 { width: 87%; }
+.w-88 { width: 88%; }
+.w-89 { width: 89%; }
+.w-90 { width: 90%; }
+.w-91 { width: 91%; }
+.w-92 { width: 92%; }
+.w-93 { width: 93%; }
+.w-94 { width: 94%; }
+.w-95 { width: 95%; }
+.w-96 { width: 96%; }
+.w-97 { width: 97%; }
+.w-98 { width: 98%; }
+.w-99 { width: 99%; }
+.w-100 { width: 100%; }

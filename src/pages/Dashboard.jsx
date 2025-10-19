@@ -50,12 +50,12 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
   const [expandedCategories, setExpandedCategories] = useState({});
   const [users, setUsers] = useState([]);
 
-  // Загрузка данных при монтировании
+  
   useEffect(() => {
     initializeData();
   }, []);
 
-  // Загрузка данных проекта при смене проекта
+
   useEffect(() => {
     if (currentProjectId) {
       loadProjectData(currentProjectId);
@@ -67,14 +67,14 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
     setLoading(true);
     setError(null);
     
-    // Загружаем данные параллельно для скорости
+   
     await Promise.all([
       loadProjects(),
       loadUsers(),
       loadDistributions()
     ]);
     
-    // Если проект выбран, загружаем его данные
+   
     if (currentProjectId) {
       await loadProjectData(currentProjectId);
     }
@@ -83,7 +83,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
     console.error('Failed to initialize data:', err);
     setError('Ошибка загрузки данных. Проверьте подключение к серверу.');
     
-    // Показываем уведомление пользователю
+    
     alert('Не удалось загрузить данные. Проверьте подключение к интернету.');
   } finally {
     setLoading(false);
@@ -124,7 +124,7 @@ const handleApiError = (err, context) => {
       }
     } catch (err) {
       console.error('Failed to load projects:', err);
-      // Fallback к локальным данным
+      //Локальные даннные для проекта для демонстрации работы
       setProjects([{
         id: 1, 
         name: "Главный проект", 
@@ -154,13 +154,13 @@ const loadTestCases = async (projectId) => {
   try {
   
     
-    // Загружаем тест-кейсы и категории параллельно
+   
       const [testCasesData, categoriesData] = await Promise.all([
       apiService.listTestCases(projectId),
       apiService.listTestCaseCategories(projectId)
     ]);
     
-    // Форматируем категории
+    
     const formattedCategories = categoriesData.map(category => ({
       id: category.id,
       name: category.name,
@@ -170,7 +170,7 @@ const loadTestCases = async (projectId) => {
       testCases: []
     }));
     
-    // Группируем тест-кейсы по категориям
+    
     testCasesData.forEach(testCase => {
       const categoryId = testCase.category_id;
       const category = formattedCategories.find(cat => cat.id === categoryId);
@@ -194,15 +194,13 @@ const loadTestCases = async (projectId) => {
   } catch (err) {
     console.error('Failed to load test cases:', err);
     
-    // Fallback на демо-данные
-       const demoCategories = getDemoCategories(projectId);
-    setTestCaseCategories(demoCategories);
+
   } 
 };
 
 const loadTestRuns = async (projectId) => {
   try {
-    // Используем метод listTestRuns вместо listRunItems
+    
     const testRunsData = await apiService.listTestRuns(projectId);
     
     const formattedTestRuns = testRunsData.map(testRun => ({
@@ -226,9 +224,7 @@ const loadTestRuns = async (projectId) => {
   } catch (err) {
     console.error('Failed to load test runs:', err);
     
-    // Fallback на демо-данные
-    const demoTestRuns = getDemoTestRuns(projectId);
-    setTestRuns(demoTestRuns);
+
   }
 };
 
@@ -244,7 +240,8 @@ const loadTestPlans = async (projectId) => {
       version: plan.version || '1.0',
       status: plan.status || 'active',
       createdAt: plan.created_at || new Date().toISOString(),
-      testCaseCount: plan.test_case_count || 0
+      testCaseCount: plan.test_case_count || 0,
+      selectedDistributions: plan.selected_distributions || plan.selectedDistributions || []
     }));
     
     setTestPlans(formattedTestPlans);
@@ -252,9 +249,7 @@ const loadTestPlans = async (projectId) => {
   } catch (err) {
     console.error('Failed to load test plans:', err);
     
-    // Fallback на демо-данные
-    const demoTestPlans = getDemoTestPlans(projectId);
-    setTestPlans(demoTestPlans);
+  
   }
 };
 
@@ -262,9 +257,9 @@ const loadProjectStatuses = async (projectId) => {
   try {
     const statuses = await apiService.listProjectStatuses(projectId);
     
-    // Обновляем статус проекта если есть актуальный статус
+    
     if (statuses && statuses.length > 0) {
-      const latestStatus = statuses[statuses.length - 1]; // берем последний статус
+      const latestStatus = statuses[statuses.length - 1]; 
       setProjects(prev => prev.map(project => 
         project.id === projectId 
           ? { ...project, status: latestStatus.status }
@@ -311,7 +306,7 @@ const loadDistributions = async () => {
       return;
     }
     
-    const distributionsData = await apiService.listDistributions();
+  const distributionsData = await apiService.listDistributions(currentProjectId);
     
     const formattedDistributions = distributionsData.map(dist => ({
       id: dist.id,
@@ -329,13 +324,11 @@ const loadDistributions = async () => {
   } catch (err) {
     console.error('Failed to load distributions:', err);
     
-    // Fallback на демо-данные
-    const demoDistributions = getDemoDistributions();
-    setDistributions(demoDistributions);
+
   }
 };
 
-  // Проверки прав доступа
+  
   const hasAccessToCurrentProject = () => {
     if (!currentUser) return false;
     if (currentUser.role === 'senior_admin') return true;
@@ -366,9 +359,9 @@ const loadDistributions = async () => {
     return hasPermission(currentUser, 'manageUsers');
   };
 
-  // Основные функции
+  
 const createProject = async (projectData) => {
-  console.log('createProject called with:', projectData); // ДОБАВЬТЕ ЭТУ СТРОКУ
+  console.log('createProject called with:', projectData); 
   
   if (!canCreate('project')) {
     alert('У вас нет прав для создания проектов');
@@ -376,7 +369,7 @@ const createProject = async (projectData) => {
   }
 
   try {
-    console.log('Sending API request...'); // ДОБАВЬТЕ ЭТУ СТРОКУ
+    console.log('Sending API request...'); 
     
     const newProject = await apiService.createProject({
       name: projectData.name,
@@ -385,7 +378,7 @@ const createProject = async (projectData) => {
       environment1: projectData.environment1,
     });
 
-    console.log('API response:', newProject); // ДОБАВЬТЕ ЭТУ СТРОКУ
+    console.log('API response:', newProject); 
 
     setProjects(prev => [...prev, newProject]);
     setCurrentProjectId(newProject.id);
@@ -398,16 +391,14 @@ const createProject = async (projectData) => {
 };
   const createTestCaseCategory = async (categoryData) => {
     try {
-      const newCategory = {
-        id: Date.now(),
-        ...categoryData,
-        projectId: currentProjectId,
-        planId: currentPlanId,
-        testCases: []
+      const payload = {
+        name: categoryData.name,
+        description: categoryData.description,
+        plan_id: currentPlanId || null
       };
-      
-      setTestCaseCategories(prev => [...prev, newCategory]);
-      setExpandedCategories(prev => ({ ...prev, [newCategory.id]: true }));
+      await apiService.createTestCaseCategory(currentProjectId, payload);
+      await loadTestCases(currentProjectId);
+      setExpandedCategories(prev => ({ ...prev, [payload.id]: true }));
       setShowCategoryModal(false);
     } catch (err) {
       alert('Ошибка при создании группы');
@@ -422,24 +413,17 @@ const createProject = async (projectData) => {
     }
 
     try {
-      const newTestCase = {
-        id: Date.now(),
-        projectId: currentProjectId,
-        status: "not-run",
-        passed: false,
-        errorDetails: null,
-        ...testCaseData,
+      const payload = {
+        title: testCaseData.name,
+        description: testCaseData.description,
+        type: testCaseData.type,
+        priority: testCaseData.priority,
+        expected_result: testCaseData.expectedResult,
+        category_id: parseInt(testCaseData.categoryId),
         steps: testCaseData.steps || []
       };
-
-      setTestCaseCategories(prevCategories =>
-        prevCategories.map(category =>
-          category.id === parseInt(testCaseData.categoryId)
-            ? { ...category, testCases: [...category.testCases, newTestCase] }
-            : category
-        )
-      );
-      
+      await apiService.createTestCase(currentProjectId, payload);
+      await loadTestCases(currentProjectId);
       setShowTestCaseItemModal(false);
     } catch (err) {
       alert('Ошибка при создании тест-кейса');
@@ -454,24 +438,15 @@ const createProject = async (projectData) => {
     }
 
     try {
-      const newTestRun = {
-        id: Date.now(),
-        projectId: currentProjectId,
+      const payload = {
+        project_id: currentProjectId,
         name: formData.name,
         description: formData.description,
         type: formData.type,
-        date: new Date().toLocaleString(),
-        tests: formData.selectedTestCases.map(testId => ({
-          id: testId,
-          status: 'not-run',
-          passed: false
-        })),
-        status: 'not-run',
-        passed: 0,
-        failed: 0
+        test_case_ids: formData.selectedTestCases
       };
-
-      setTestRuns(prev => [...prev, newTestRun]);
+      await apiService.createRun(payload);
+      await loadTestRuns(currentProjectId);
       setShowTestRunModal(false);
     } catch (err) {
       alert('Ошибка при создании тест-рана');
@@ -543,7 +518,7 @@ const createProject = async (projectData) => {
         })
       );
 
-      // Имитация автоматического тестирования
+      
       setTimeout(() => {
         completeAutomatedTestRun(testRunId);
       }, 3000);
@@ -614,32 +589,45 @@ const createProject = async (projectData) => {
   };
 
   const deleteTestRun = (testRunId) => {
-    if (window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) {
-      setTestRuns(prev => prev.filter(run => run.id !== testRunId));
-    }
+    if (!window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) return;
+    const remove = async () => {
+      try {
+        await apiService.deleteRun(testRunId);
+        await loadTestRuns(currentProjectId);
+      } catch (err) {
+        console.error('Failed to delete run:', err);
+        alert('Не удалось удалить тест-ран');
+      }
+    };
+    remove();
   };
 
   const deleteTestCase = (testCaseId, categoryId) => {
-    if (window.confirm('Вы уверены, что хотите удалить этот тест-кейс?')) {
-      setTestCaseCategories(prevCategories =>
-        prevCategories.map(category =>
-          category.id === categoryId
-            ? {
-                ...category,
-                testCases: category.testCases.filter(test => test.id !== testCaseId)
-              }
-            : category
-        )
-      );
-    }
+    if (!window.confirm('Вы уверены, что хотите удалить этот тест-кейс?')) return;
+    const remove = async () => {
+      try {
+        await apiService.deleteTestCase(testCaseId);
+        await loadTestCases(currentProjectId);
+      } catch (err) {
+        console.error('Failed to delete test case:', err);
+        alert('Не удалось удалить тест-кейс');
+      }
+    };
+    remove();
   };
 
   const deleteTestCaseCategory = (categoryId) => {
-    if (window.confirm('Вы уверены, что хотите удалить эту группу? Все тест-кейсы внутри нее также будут удалены.')) {
-      setTestCaseCategories(prevCategories => 
-        prevCategories.filter(category => category.id !== categoryId)
-      );
-    }
+    if (!window.confirm('Вы уверены, что хотите удалить эту группу? Все тест-кейсы внутри нее также будут удалены.')) return;
+    const remove = async () => {
+      try {
+        await apiService.deleteTestCaseCategory(categoryId);
+        await loadTestCases(currentProjectId);
+      } catch (err) {
+        console.error('Failed to delete category:', err);
+        alert('Не удалось удалить группу');
+      }
+    };
+    remove();
   };
 
   const saveManualReport = (reportData) => {
@@ -654,25 +642,61 @@ const createProject = async (projectData) => {
   };
 
   const createTestPlan = (planData) => {
-    const newTestPlan = {
-      id: Date.now(),
-      ...planData,
-      testCaseCategories: []
+    const create = async () => {
+      try {
+        const payload = {
+          name: planData.name,
+          description: planData.description,
+          version: planData.version,
+          objective: planData.objective,
+          scope: planData.scope,
+          selected_distributions: planData.selectedDistributions || []
+        };
+        await apiService.createTestPlan(currentProjectId, payload);
+        await loadTestPlans(currentProjectId);
+        setShowTestPlanModal(false);
+      } catch (err) {
+        console.error('Failed to create test plan:', err);
+        alert('Не удалось создать тест-план');
+      }
     };
-    setTestPlans([...testPlans, newTestPlan]);
-    setShowTestPlanModal(false);
+    create();
   };
 
   const createDistribution = (distroData) => {
-    const newDistribution = {
-      id: Date.now(),
-      ...distroData
+    const create = async () => {
+      try {
+        const created = await apiService.createDistribution(currentProjectId, distroData);
+        setDistributions(prev => [...prev, created]);
+        setShowDistributionModal(false);
+      } catch (err) {
+        console.error('Failed to create distribution:', err);
+        alert('Не удалось создать дистрибутив');
+      }
     };
-    setDistributions([...distributions, newDistribution]);
-    setShowDistributionModal(false);
+    create();
   };
 
-  // Drag & Drop функции
+  const deleteDistribution = (distroId) => {
+    if (!window.confirm('Вы уверены, что хотите удалить дистрибутив?')) return;
+    const remove = async () => {
+      try {
+        await apiService.deleteDistribution(distroId);
+        setDistributions(prev => prev.filter(d => d.id !== distroId));
+        
+        setTestPlans(prev => prev.map(plan => ({
+          ...plan,
+          selectedDistributions: (plan.selectedDistributions || []).filter(id => id !== distroId)
+        })));
+      } catch (err) {
+        console.error('Failed to delete distribution:', err);
+        alert('Не удалось удалить дистрибутив');
+      }
+    };
+    remove();
+  };
+
+  
   const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
     if (fromCategoryId === toCategoryId) return;
 
@@ -735,7 +759,7 @@ const createProject = async (projectData) => {
     setShowReportModal(true);
   };
 
-  // Вспомогательные функции для статистики
+ 
   const currentProject = projects.find(p => p.id === currentProjectId);
   const currentProjectTests = testCaseCategories.flatMap(category => category.testCases);
   const totalTests = currentProjectTests.length;
@@ -743,13 +767,24 @@ const createProject = async (projectData) => {
   const failedTests = currentProjectTests.filter(test => test.status === 'failed').length;
   const inProgressTests = currentProjectTests.filter(test => test.status === 'running').length;
 
+  
+  const filteredCategories = currentPlanId
+    ? testCaseCategories.filter(cat => cat.planId === currentPlanId)
+    : testCaseCategories.filter(cat => !cat.planId);
+
+  const visibleTests = filteredCategories.flatMap(cat => cat.testCases);
+  const visibleTotalTests = visibleTests.length;
+  const visiblePassedTests = visibleTests.filter(t => t.status === 'passed').length;
+  const visibleFailedTests = visibleTests.filter(t => t.status === 'failed').length;
+  const visibleInProgressTests = visibleTests.filter(t => t.status === 'running').length;
+
   const currentProjectRuns = testRuns.filter(run => run.projectId === currentProjectId);
   const totalRuns = currentProjectRuns.length;
   const completedRuns = currentProjectRuns.filter(run => run.status === 'completed').length;
   const runningRuns = currentProjectRuns.filter(run => run.status === 'running').length;
   const notRunRuns = currentProjectRuns.filter(run => run.status === 'not-run').length;
 
-  // Временные моковые функции
+  
   const mockLoadTestCases = async (projectId) => {
     return [];
   };
@@ -777,7 +812,7 @@ const createProject = async (projectData) => {
           canCreateProject={canCreate('project')}
         />
         <div className="container">
-          <div className="loading" style={{ textAlign: 'center', padding: '50px' }}>
+          <div className="loading">
             <h3>Загрузка данных...</h3>
           </div>
         </div>
@@ -803,7 +838,7 @@ const createProject = async (projectData) => {
           canCreateProject={canCreate('project')}
         />
         <div className="container">
-          <div className="access-denied" style={{ textAlign: 'center', padding: '50px' }}>
+          <div className="access-denied">
             <h2>Доступ запрещен</h2>
             <p>У вас нет доступа к выбранному проекту.</p>
             <p>Пожалуйста, выберите другой проект или обратитесь к администратору.</p>
@@ -812,166 +847,6 @@ const createProject = async (projectData) => {
       </div>
     );
   }
-
-// Вспомогательные функции для демо-данных (добавьте перед render)
-const getDemoCategories = (projectId) => [
-  {
-    id: 1,
-    name: "Основные функциональные тесты",
-    description: "Тесты основной функциональности приложения",
-    projectId: projectId,
-    testCases: [
-      {
-        id: 1,
-        name: "Авторизация пользователя",
-        description: "Проверка входа в систему",
-        priority: "high",
-        type: "functional",
-        status: "not-run",
-        steps: [
-          "Открыть страницу авторизации",
-          "Ввести корректные учетные данные", 
-          "Нажать кнопку 'Войти'",
-          "Проверить переход на главную страницу"
-        ],
-        projectId: projectId
-      },
-      {
-        id: 2,
-        name: "Создание нового проекта",
-        description: "Проверка создания проекта",
-        priority: "medium",
-        type: "functional",
-        status: "not-run",
-        steps: [
-          "Перейти в раздел управления проектами",
-          "Нажать кнопку 'Создать проект'",
-          "Заполнить обязательные поля",
-          "Сохранить проект"
-        ],
-        projectId: projectId
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: "API тесты",
-    description: "Тестирование REST API endpoints",
-    projectId: projectId,
-    testCases: [
-      {
-        id: 3,
-        name: "GET /api/projects",
-        description: "Проверка получения списка проектов",
-        priority: "high",
-        type: "api",
-        status: "not-run",
-        steps: [
-          "Отправить GET запрос на /api/projects",
-          "Проверить статус код 200",
-          "Проверить структуру ответа",
-          "Проверить наличие обязательных полей"
-        ],
-        projectId: projectId
-      }
-    ]
-  }
-];
-
-const getDemoTestRuns = (projectId) => [
-  {
-    id: 1,
-    projectId: projectId,
-    name: "Регрессионное тестирование v1.0",
-    description: "Полное регрессионное тестирование версии 1.0",
-    type: "Automatic",
-    status: "completed",
-    date: new Date().toLocaleString(),
-    tests: [
-      { id: 1, status: 'passed', passed: true },
-      { id: 2, status: 'passed', passed: true },
-      { id: 3, status: 'failed', passed: false }
-    ],
-    passed: 2,
-    failed: 1,
-    total: 3,
-    startTime: new Date(Date.now() - 3600000).toISOString(),
-    endTime: new Date().toISOString()
-  },
-  {
-    id: 2,
-    projectId: projectId,
-    name: "Дымовое тестирование",
-    description: "Быстрая проверка основных функций",
-    type: "Hand",
-    status: "not-run",
-    date: new Date().toLocaleString(),
-    tests: [
-      { id: 1, status: 'not-run', passed: false },
-      { id: 2, status: 'not-run', passed: false }
-    ],
-    passed: 0,
-    failed: 0,
-    total: 2
-  }
-];
-
-const getDemoTestPlans = (projectId) => [
-  {
-    id: 1,
-    projectId: projectId,
-    name: "Основной тест-план",
-    description: "Основной план тестирования функциональности",
-    version: "1.0",
-    status: "active",
-    createdAt: new Date().toISOString(),
-    testCaseCount: 15
-  },
-  {
-    id: 2,
-    projectId: projectId,
-    name: "Регрессионный тест-план", 
-    description: "План для регрессионного тестирования",
-    version: "2.1",
-    status: "active",
-    createdAt: new Date().toISOString(),
-    testCaseCount: 8
-  }
-];
-
-const getDemoDistributions = () => [
-  {
-    id: 1,
-    name: "Production Release",
-    version: "1.0.0",
-    type: "release",
-    status: "stable",
-    description: "Стабильная версия для продакшена",
-    downloadUrl: "http://example.com/distro/v1.0.0",
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 2,
-    name: "Beta Release", 
-    version: "1.1.0-beta",
-    type: "beta",
-    status: "testing",
-    description: "Бета-версия для тестирования новых функций",
-    downloadUrl: "http://example.com/distro/v1.1.0-beta",
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 3,
-    name: "Development Build",
-    version: "2.0.0-dev",
-    type: "development", 
-    status: "unstable",
-    description: "Ночная сборка для разработчиков",
-    downloadUrl: "http://example.com/distro/v2.0.0-dev",
-    createdAt: new Date().toISOString()
-  }
-];
-
 
   return (
     <div className="main-content">
@@ -988,13 +863,9 @@ const getDemoDistributions = () => [
       />
 
       {/* Баннер с информацией о роли */}
-      <div className="role-banner" style={{
-        background: 'var(--bg-tertiary)',
-        padding: '10px 0',
-        borderBottom: '1px solid var(--border-color)'
-      }}>
+      <div className="role-banner">
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className='role-banner-container'>
             <span>
               <strong>Роль:</strong> {getRoleDisplayName(currentUser.role)} | 
               <strong> Проект:</strong> {currentProject?.name || 'Не выбран'}
@@ -1028,20 +899,19 @@ const getDemoDistributions = () => [
             </button>
           </div>
 
-          {/* Селектор тест-плана */}
-          <div className="plan-selector" style={{ margin: '15px 0', padding: '15px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-            <label style={{ marginRight: '10px', fontWeight: '600' }}>Тест-план:</label>
+
+      <section className="dashboard">
+        <div className="container">
+          <div className="dashboard-header">
+            <h1 className="dashboard-title">Панель управления</h1>
+          </div>
+                    {/* Селектор тест-плана */}
+          <div className="plan-selector plan-selector--boxed">
+            <label className="plan-selector__label">Тест-план:</label>
             <select 
               value={currentPlanId || ''} 
               onChange={(e) => setCurrentPlanId(e.target.value ? parseInt(e.target.value) : null)}
-              style={{ 
-                background: 'var(--bg-primary)', 
-                color: 'var(--text-primary)', 
-                border: '1px solid var(--border-color)',
-                padding: '8px 12px',
-                borderRadius: '6px',
-                minWidth: '200px'
-              }}
+              className="plan-selector__select"
             >
               <option value="">-- Без плана --</option>
               {testPlans
@@ -1056,28 +926,26 @@ const getDemoDistributions = () => [
             
             {canCreate('testPlan') && (
               <button 
-                className="btn btn-outline" 
+                className="btn btn-outline btn-new-plan btn--ml"
                 onClick={() => setShowTestPlanModal(true)}
-                style={{ marginLeft: '10px' }}
               >
                 <i className="fas fa-plus"></i> Новый план
               </button>
             )}
+             {canCreate('project') && (
+                  <button className="btn btn-outline" onClick={() => setShowDistributionModal(true)}>
+                    <i className="fas fa-server"></i> Управление дистрибутивами
+                  </button>
+                )}
           </div>
         </div>
       </section>
 
-      <section className="dashboard">
-        <div className="container">
-          <div className="dashboard-header">
-            <h1 className="dashboard-title">Панель управления</h1>
-          </div>
-          
           {/* Статистика */}
-          <div className="stats">
+              <div className="stats">
             <div className="stat-card">
-              <h3>Всего тест-кейсов</h3>
-              <div className="number">{totalTests}</div>
+                  <h3>Всего тест-кейсов</h3>
+                  <div className="number">{visibleTotalTests}</div>
             </div>
             <div className="stat-card">
               <h3>Всего тест-ранов</h3>
@@ -1085,15 +953,15 @@ const getDemoDistributions = () => [
             </div>
             <div className="stat-card">
               <h3>В процессе</h3>
-              <div className="number">{runningRuns}</div>
+                  <div className="number">{visibleInProgressTests}</div>
             </div>
             <div className="stat-card">
               <h3>Завершено</h3>
-              <div className="number">{completedRuns}</div>
+                  <div className="number">{visiblePassedTests}</div>
             </div>
             <div className="stat-card">
               <h3>В ожидании</h3>
-              <div className="number">{notRunRuns}</div>
+                  <div className="number">{visibleFailedTests}</div>
             </div>
           </div>
           
@@ -1128,17 +996,8 @@ const getDemoDistributions = () => [
               <p>Создавайте группы и управляйте тест-кейсами:</p>
               
               <div className="category-controls">
-                {canCreate('testPlan') && (
-                  <button className="btn btn-primary" onClick={() => setShowTestPlanModal(true)}>
-                    <i className="fas fa-clipboard-list"></i> Создать тест-план
-                  </button>
-                )}
-                
-                {canCreate('project') && (
-                  <button className="btn btn-outline" onClick={() => setShowDistributionModal(true)}>
-                    <i className="fas fa-server"></i> Управление дистрибутивами
-                  </button>
-                )}
+               
+               
                 
                 {canCreate('testCase') && (
                   <>
@@ -1154,21 +1013,20 @@ const getDemoDistributions = () => [
 
               {/* Рендер групп тест-кейсов */}
               <div className="test-case-categories">
-                {testCaseCategories.length === 0 ? (
-                  <div className="empty-state" style={{ textAlign: 'center', padding: '50px' }}>
+                {filteredCategories.length === 0 ? (
+                  <div className="empty-state">
                     <h3>Нет групп тест-кейсов</h3>
                     <p>Создайте первую группу для организации тест-кейсов</p>
                     {canCreate('testCase') && (
                       <button 
-                        className="btn btn-primary"
-                        onClick={() => setShowCategoryModal(true)}
-                      >
+                        className="btn btn-primary btn-test-group"
+                        onClick={() => setShowCategoryModal(true)}>
                         Создать группу
                       </button>
                     )}
                   </div>
                 ) : (
-                  testCaseCategories.map(category => (
+                  filteredCategories.map(category => (
                     <div 
                       key={category.id} 
                       className="test-case-category"
@@ -1177,14 +1035,12 @@ const getDemoDistributions = () => [
                     >
                       <div className="category-header">
                         <div 
-                          className="category-info"
+                          className="category-info category-info--clickable"
                           onClick={() => toggleCategory(category.id)}
-                          style={{ cursor: 'pointer', flex: 1 }}
                         >
                           <div className="category-title-wrapper">
                             <i 
-                              className={`fas fa-chevron-${expandedCategories[category.id] ? 'down' : 'right'}`}
-                              style={{ marginRight: '10px', transition: 'transform 0.3s' }}
+                              className={`fas fa-chevron-${expandedCategories[category.id] ? 'down' : 'right'} chev-icon`}
                             ></i>
                             <h3>{category.name}</h3>
                           </div>
@@ -1289,7 +1145,7 @@ const getDemoDistributions = () => [
               
               <div id="testRunsList">
                 {currentProjectRuns.length === 0 ? (
-                  <div className="empty-state" style={{ textAlign: 'center', padding: '50px' }}>
+                  <div className="empty-state">
                     <h3>Нет тест-ранов</h3>
                     <p>Создайте первый тест-ран для запуска тестирования</p>
                     {canCreate('testRun') && (
@@ -1414,7 +1270,7 @@ const getDemoDistributions = () => [
 
               {/* Ручные отчеты */}
               {manualReports.filter(report => report.projectId === currentProjectId).length > 0 && (
-                <div className="manual-reports" style={{ marginTop: '30px' }}>
+                <div className="manual-reports">
                   <h3>Ручные отчеты</h3>
                   <div className="reports-list">
                     {manualReports
@@ -1440,7 +1296,6 @@ const getDemoDistributions = () => [
         <ProjectModal 
           onClose={() => setShowProjectModal(false)} 
           onCreate={createProject}
-          distributions={distributions}
         />
       )}
 
@@ -1455,7 +1310,7 @@ const getDemoDistributions = () => [
         <TestCaseItemModal 
           onClose={() => setShowTestCaseItemModal(false)} 
           onCreate={createTestCaseInCategory}
-          categories={testCaseCategories}
+          categories={filteredCategories}
         />
       )}
 
@@ -1463,7 +1318,7 @@ const getDemoDistributions = () => [
         <TestRunModal 
           onClose={() => setShowTestRunModal(false)} 
           onCreate={createTestRun}
-          categories={testCaseCategories}
+          categories={filteredCategories}
         />
       )}
 
@@ -1487,7 +1342,10 @@ const getDemoDistributions = () => [
       {showDistributionModal && (
         <DistributionModal 
           onClose={() => setShowDistributionModal(false)} 
-          onCreate={createDistribution} 
+          onCreate={createDistribution}
+          onDelete={deleteDistribution}
+          distributions={distributions}
+          currentProjectId={currentProjectId}
         />
       )}
 

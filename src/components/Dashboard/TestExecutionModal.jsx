@@ -8,16 +8,12 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   const [isExecuting, setIsExecuting] = useState(false);
   const [stepComment, setStepComment] = useState('');
   const [actualResult, setActualResult] = useState('');
-
-  // Безопасное получение тест-кейсов
   const testCases = testRun?.tests || [];
   const currentTestCase = testCases[currentTestCaseIndex] || {};
-  
-  // Безопасное получение шагов тест-кейса
   const steps = currentTestCase?.steps || [];
   const currentStep = steps[currentStepIndex] || {};
 
-  // Инициализация результатов при загрузке
+ 
   useEffect(() => {
     if (testCases.length > 0) {
       const initialResults = {};
@@ -32,7 +28,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
     }
   }, [testCases]);
 
-  // Сброс полей ввода при смене шага
+  
   useEffect(() => {
     setStepComment('');
     setActualResult('');
@@ -55,11 +51,11 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
 
     setStepResults(newStepResults);
 
-    // Переход к следующему шагу или завершение тест-кейса
+    
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      // Все шаги завершены - оцениваем весь тест-кейс
+     
       const allStepsPassed = Object.values(newStepResults).every(step => step.passed);
       
       const newTestResults = {
@@ -77,11 +73,11 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
       setStepComment('');
       setActualResult('');
 
-      // Переход к следующему тест-кейсу или завершение
+     
       if (currentTestCaseIndex < testCases.length - 1) {
         setCurrentTestCaseIndex(currentTestCaseIndex + 1);
       } else {
-        // Все тест-кейсы завершены
+       
         completeTestRun(newTestResults);
       }
     }
@@ -142,7 +138,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
     return Math.round(((currentStepIndex + 1) / steps.length) * 100);
   };
 
-  // Если нет тест-кейсов для выполнения
+
   if (testCases.length === 0) {
     return (
       <div className="modal active">
@@ -169,7 +165,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
 
   return (
     <div className="modal active">
-      <div className="modal-content" style={{ maxWidth: '900px' }}>
+      <div className="modal-content modal-content--wide">
         <div className="modal-header">
           <h2 className="modal-title">Ручное выполнение тест-рана</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
@@ -182,9 +178,8 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
               Прогресс тест-рана: {getProgressPercentage()}%
             </div>
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${getProgressPercentage()}%` }}
+              <div
+                className={`progress-fill w-${getProgressPercentage()}`}
               ></div>
             </div>
             <div className="progress-info">
@@ -206,10 +201,9 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                   Шаг {currentStepIndex + 1} из {steps.length} ({getStepProgressPercentage()}%)
                 </div>
                 <div className="progress-bar">
-                  <div 
-                    className="progress-fill" 
-                    style={{ width: `${getStepProgressPercentage()}%` }}
-                  ></div>
+                    <div
+                      className={`progress-fill w-${getStepProgressPercentage()}`}
+                    ></div>
                 </div>
               </div>
             )}
@@ -237,7 +231,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                       onChange={(e) => setActualResult(e.target.value)}
                       placeholder="Опишите фактический результат выполнения шага..."
                       rows="3"
-                      style={{ width: '100%', resize: 'vertical' }}
+                      className="full-width-resize"
                     />
                   </div>
 
@@ -250,7 +244,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                       onChange={(e) => setStepComment(e.target.value)}
                       placeholder="Добавьте комментарии, замечания или примечания..."
                       rows="2"
-                      style={{ width: '100%', resize: 'vertical' }}
+                      className="full-width-resize"
                     />
                   </div>
 
@@ -260,21 +254,21 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                     <button 
                       className="btn btn-success"
                       onClick={() => handleStepResult(true)}
-                      disabled={!actualResult.trim()} // Требуем заполнения фактического результата
+                      disabled={!actualResult.trim()} 
                     >
                       <i className="fas fa-check"></i> Шаг выполнен успешно
                     </button>
                     <button 
                       className="btn btn-danger"
                       onClick={() => handleStepResult(false)}
-                      disabled={!actualResult.trim()} // Требуем заполнения фактического результата
+                      disabled={!actualResult.trim()} 
                     >
                       <i className="fas fa-times"></i> Шаг не выполнен
                     </button>
                   </div>
 
                   {!actualResult.trim() && (
-                    <p style={{ color: 'var(--warning)', fontSize: '14px', marginTop: '10px' }}>
+                    <p className="warning-note">
                       * Пожалуйста, опишите фактический результат перед оценкой шага
                     </p>
                   )}
@@ -293,7 +287,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                     onChange={(e) => setActualResult(e.target.value)}
                     placeholder="Опишите фактический результат выполнения тест-кейса..."
                     rows="3"
-                    style={{ width: '100%', resize: 'vertical' }}
+                    className="full-width-resize"
                   />
                 </div>
 
@@ -305,7 +299,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                     onChange={(e) => setStepComment(e.target.value)}
                     placeholder="Добавьте комментарии, замечания или примечания..."
                     rows="2"
-                    style={{ width: '100%', resize: 'vertical' }}
+                    className="full-width-resize"
                   />
                 </div>
 
@@ -329,7 +323,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                 </div>
 
                 {!actualResult.trim() && (
-                  <p style={{ color: 'var(--warning)', fontSize: '14px', marginTop: '10px' }}>
+                  <p className="warning-note">
                     * Пожалуйста, опишите фактический результат перед оценкой тест-кейса
                   </p>
                 )}

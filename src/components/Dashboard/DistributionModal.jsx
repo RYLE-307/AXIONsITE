@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const DistributionModal = ({ onClose, onCreate }) => {
+const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, currentProjectId }) => {
   const [formData, setFormData] = useState({
     name: '',
     version: '',
@@ -13,9 +13,10 @@ const DistributionModal = ({ onClose, onCreate }) => {
     onCreate({
       id: Date.now(),
       ...formData,
+      projectId: currentProjectId,
       createdAt: new Date().toISOString()
     });
-    onClose();
+    setFormData({ name: '', version: '', type: 'linux', description: '' });
   };
 
   const handleChange = (e) => {
@@ -25,13 +26,44 @@ const DistributionModal = ({ onClose, onCreate }) => {
     });
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm('Удалить дистрибутив? Это действие нельзя отменить.')) {
+      onDelete(id);
+    }
+  };
+
   return (
     <div className="modal active">
-      <div className="modal-content">
+  <div className="modal-content">
         <div className="modal-header">
-          <h2 className="modal-title">Добавление дистрибутива</h2>
+          <h2 className="modal-title">Управление дистрибутивами</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
+
+  <div className="dist-list-wrapper">
+          <h3>Существующие дистрибутивы</h3>
+          {distributions.length === 0 ? (
+            <p className="no-distributions">Нет дистрибутивов для этого проекта.</p>
+          ) : (
+            <div className="dist-cards">
+              {distributions
+                .filter(d => d.projectId === currentProjectId)
+                .map(d => (
+                <div key={d.id} className="dist-card">
+                  <div className="dist-main">
+                    <div className="dist-name">{d.name} <span className="dist-version">{d.version}</span></div>
+                    <div className="dist-type">{d.type}</div>
+                    {d.description && <div className="dist-desc">{d.description}</div>}
+                  </div>
+                  <div className="dist-actions">
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDelete(d.id)}>Удалить</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="distroName">Название дистрибутива</label>
@@ -45,7 +77,7 @@ const DistributionModal = ({ onClose, onCreate }) => {
               placeholder="Например: Ubuntu, Windows, macOS" 
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="distroVersion">Версия</label>
             <input 
@@ -58,7 +90,7 @@ const DistributionModal = ({ onClose, onCreate }) => {
               placeholder="Например: 22.04, 11, 14.0" 
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="distroType">Тип ОС</label>
             <select 
@@ -75,7 +107,7 @@ const DistributionModal = ({ onClose, onCreate }) => {
               <option value="other">Другая</option>
             </select>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="distroDescription">Описание</label>
             <textarea 
@@ -87,10 +119,10 @@ const DistributionModal = ({ onClose, onCreate }) => {
               rows="3"
             />
           </div>
-          
+
           <div className="form-actions">
             <button type="button" className="btn btn-outline" onClick={onClose}>
-              Отмена
+              Закрыть
             </button>
             <button type="submit" className="btn btn-primary">
               Добавить дистрибутив

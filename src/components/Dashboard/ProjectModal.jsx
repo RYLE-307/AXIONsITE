@@ -5,12 +5,11 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
     name: '',
     description: '',
     environment: 'разработка',
-    environment1: 'QWA',
-    selectedDistributions: []
+    environment1: 'OpenQA'
   });
   const [loading, setLoading] = useState(false);
 
-  // Добавьте эту функцию для обработки изменений в текстовых полях и селектах
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -21,7 +20,7 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with data:', formData); // ДОБАВЬТЕ ЭТУ СТРОКУ
+    console.log('Form submitted with data:', formData); 
     setLoading(true);
     
     try {
@@ -57,11 +56,11 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <input 
               type="text" 
               id="name" 
-              name="name" // Добавьте атрибут name
+              name="name" 
               required 
               placeholder="Введите название проекта"
               value={formData.name}
-              onChange={handleChange} // Теперь handleChange определена
+              onChange={handleChange} 
             />
           </div>
           
@@ -69,10 +68,10 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectDescription">Описание проекта</label>
             <textarea 
               id="description" 
-              name="description" // Добавьте атрибут name
+              name="description" 
               placeholder="Опишите цель проекта"
               value={formData.description}
-              onChange={handleChange} // Теперь handleChange определена
+              onChange={handleChange} 
             ></textarea>
           </div>
           
@@ -80,9 +79,9 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectEnvironment">Тестовая среда</label>
             <select 
               id="environment" 
-              name="environment" // Добавьте атрибут name
+              name="environment" 
               value={formData.environment}
-              onChange={handleChange} // Теперь handleChange определена
+              onChange={handleChange} 
             >
               <option value="Разработка">Разработка</option>
               <option value="Стейджинг">Стейджинг</option>
@@ -94,40 +93,16 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectEnvironment1">Вид тестировки</label>
             <select 
               id="environment1" 
-              name="environment1" // Добавьте атрибут name
+              name="environment1" 
               value={formData.environment1}
-              onChange={handleChange} // Теперь handleChange определена
+              onChange={handleChange} 
             >
-              <option value="QWA">кваква</option>
+              <option value="OpenQA">OpenQA</option>
               <option value="CI/CD">CI/CD</option>
-              <option value="что-то">что-то</option>
             </select>
           </div>
 
-          {/* Секция выбора дистрибутивов */}
-          <div className="form-group">
-            <label>Выберите дистрибутивы для тестирования</label>
-            <div className="distributions-selection">
-              {distributions.length === 0 ? (
-                <p className="no-distributions">Нет доступных дистрибутивов. Сначала добавьте дистрибутивы.</p>
-              ) : (
-                distributions.map(distro => (
-                  <div key={distro.id} className="distribution-checkbox">
-                    <input
-                      type="checkbox"
-                      id={`distro-${distro.id}`}
-                      checked={formData.selectedDistributions.includes(distro.id)}
-                      onChange={() => handleDistributionChange(distro.id)}
-                    />
-                    <label htmlFor={`distro-${distro.id}`}>
-                      {distro.name} {distro.version} ({distro.type})
-                    </label>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
+         
           <div className="form-actions">
             <button type="button" className="btn btn-outline" onClick={onClose}>Отмена</button>
             <button type="submit" className="btn btn-primary" disabled={loading}>

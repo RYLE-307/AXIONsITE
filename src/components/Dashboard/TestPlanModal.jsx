@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 
-const TestPlanModal = ({ onClose, onCreate, distributions, currentProjectId }) => {
-  const [formData, setFormData] = useState({
+const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId, initialData = null }) => {
+  const [formData, setFormData] = useState(initialData ? {
+    name: initialData.name || '',
+    description: initialData.description || '',
+    version: initialData.version || '1.0',
+    objective: initialData.objective || '',
+    scope: initialData.scope || '',
+    selectedDistributions: initialData.selectedDistributions || []
+  } : {
     name: '',
     description: '',
     version: '1.0',
@@ -15,9 +22,10 @@ const TestPlanModal = ({ onClose, onCreate, distributions, currentProjectId }) =
     onCreate({
       id: Date.now(),
       ...formData,
-      projectId: currentProjectId, // Привязываем к проекту
+      projectId: currentProjectId, 
       createdAt: new Date().toISOString(),
-      testCaseCategories: []
+      testCaseCategories: [],
+      selectedDistributions: formData.selectedDistributions
     });
     onClose();
   };
@@ -43,7 +51,7 @@ const TestPlanModal = ({ onClose, onCreate, distributions, currentProjectId }) =
 
   return (
     <div className="modal active">
-      <div className="modal-content" style={{ maxWidth: '800px' }}>
+      <div className="modal-content modal-content--narrow">
         <div className="modal-header">
           <h2 className="modal-title">Создание тест-плана</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
@@ -119,24 +127,25 @@ const TestPlanModal = ({ onClose, onCreate, distributions, currentProjectId }) =
                   Нет доступных дистрибутивов для этого проекта. Сначала добавьте дистрибутивы в настройках проекта.
                 </p>
               ) : (
-                distributions
-                  .filter(d => d.projectId === currentProjectId)
-                  .map(distro => (
-                    <div key={distro.id} className="distribution-checkbox">
-                      <input
-                        type="checkbox"
-                        id={`distro-${distro.id}`}
-                        checked={formData.selectedDistributions.includes(distro.id)}
-                        onChange={() => handleDistributionChange(distro.id)}
-                      />
-                      <label htmlFor={`distro-${distro.id}`}>
-                        <strong>{distro.name} {distro.version}</strong> 
-                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginLeft: '8px' }}>
-                          ({distro.type}) {distro.description && `- ${distro.description}`}
-                        </span>
+                <div className="dist-cards dist-cards--selectable">
+                  {distributions
+                    .filter(d => d.projectId === currentProjectId)
+                    .map(distro => (
+                      <label key={distro.id} className="dist-card dist-card--selectable">
+                        <input
+                          type="checkbox"
+                          id={`distro-${distro.id}`}
+                          checked={formData.selectedDistributions.includes(distro.id)}
+                          onChange={() => handleDistributionChange(distro.id)}
+                        />
+                        <div className="dist-main">
+                          <div className="dist-name">{distro.name} <span className="dist-version">{distro.version}</span></div>
+                          <div className="dist-type">{distro.type}</div>
+                          {distro.description && <div className="dist-desc">{distro.description}</div>}
+                        </div>
                       </label>
-                    </div>
-                  ))
+                    ))}
+                </div>
               )}
             </div>
           </div>

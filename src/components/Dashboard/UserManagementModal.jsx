@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getRoleDisplayName } from '../../utils/roles'; // Исправленный путь
+import { getRoleDisplayName } from '../../utils/roles'; 
 
 
 const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUser }) => {
@@ -29,7 +29,7 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
 
   return (
     <div className="modal active">
-      <div className="modal-content" style={{ maxWidth: '800px' }}>
+  <div className="modal-content modal-content--narrow">
         <div className="modal-header">
           <h2 className="modal-title">Управление пользователями</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
@@ -52,7 +52,7 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
           </div>
 
           <div className="form-row">
-            <div className="form-group" style={{ flex: 1 }}>
+            <div className="form-group form-group--flex">
               <label>Назначить проект</label>
               <select 
                 value={selectedProjectId} 
@@ -66,15 +66,14 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
                 ))}
               </select>
               <button 
-                className="btn btn-outline btn-sm"
+                className="btn btn-outline btn-sm btn--spaced"
                 onClick={handleAssignProject}
-                style={{ marginTop: '10px' }}
               >
                 Назначить проект
               </button>
             </div>
 
-            <div className="form-group" style={{ flex: 1 }}>
+            <div className="form-group form-group--flex">
               <label>Изменить роль</label>
               <select 
                 value={userRole} 
@@ -87,9 +86,8 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
                 <option value="senior_admin">Старший администратор</option>
               </select>
               <button 
-                className="btn btn-outline btn-sm"
+                className="btn btn-outline btn-sm btn--spaced"
                 onClick={handleChangeRole}
-                style={{ marginTop: '10px' }}
               >
                 Изменить роль
               </button>
@@ -100,16 +98,32 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
             <h4>Список пользователей</h4>
             {users.map(user => (
               <div key={user.id} className="user-item">
-                <div className="user-info">
-                  <strong>{user.name}</strong> ({user.email})
-                  <span className="user-role">{getRoleDisplayName(user.role)}</span>
+                <div className="user-item-left">
+                  <div className="avatar">
+                    {((user.name || user.username) && (user.name || user.username).split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()) || 'U'}
+                  </div>
+                  <div className="user-info">
+                    <div className="user-name-email">
+                      <strong>{user.name || user.username}</strong>
+                      <div className="user-email">{user.email}</div>
+                    </div>
+                    <div className="user-meta">
+                      <span className="user-role badge">{getRoleDisplayName(user.role)}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="user-projects">
-                  <strong>Проекты:</strong> {user.assignedProjects.length > 0 
-                    ? user.assignedProjects.map(projectId => 
-                        projects.find(p => p.id === projectId)?.name
-                      ).join(', ')
-                    : 'Не назначены'}
+
+                <div className="user-item-right">
+                  <div className="user-projects">
+                    <strong>Проекты:</strong> {user.assignedProjects.length > 0 
+                      ? user.assignedProjects.map(projectId => 
+                          projects.find(p => p.id === projectId)?.name
+                        ).join(', ')
+                      : 'Не назначены'}
+                  </div>
+                  <div className="user-actions">
+                    <button className="btn btn-sm btn-outline" disabled>Изменить</button>
+                  </div>
                 </div>
               </div>
             ))}

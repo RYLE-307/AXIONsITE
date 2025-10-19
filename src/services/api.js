@@ -1,5 +1,5 @@
 // services/api.js
-const API_BASE_URL = 'http://localhost:8080/api'; // Исправьте порт
+const API_BASE_URL = 'http://localhost:8080/api'; //порт под бэкенд
 
 class ApiService {
   constructor() {
@@ -16,7 +16,7 @@ class ApiService {
       ...options,
     };
 
-    // Добавляем токен авторизации если есть
+  // токен аутентификации
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -30,7 +30,7 @@ class ApiService {
       const response = await fetch(url, config);
       
       if (response.status === 401) {
-        // Перенаправление на страницу авторизации
+        
         window.location.href = '/auth';
         return;
       }
@@ -48,7 +48,7 @@ class ApiService {
     }
   }
 
-  // Projects (уже есть)
+  // Projects 
 async createProject(projectData) {
   console.log('Sending project data to API:', projectData);
   return this.request('/projects', {
@@ -77,7 +77,7 @@ async createProject(projectData) {
     });
   }
 
-  // Test Cases (расширяем)
+  // Test Cases 
   async createTestCase(projectId, testCaseData) {
     return this.request(`/projects/${projectId}/test-cases`, {
       method: 'POST',
@@ -114,18 +114,23 @@ async createProject(projectData) {
 
   // Test Runs
   async createTestRun(projectId, testRunData) {
-    return this.request(`/projects/${projectId}/test-runs`, {
+    // Backend exposes POST /runs — include project_id in the body
+    const body = { project_id: projectId, ...testRunData };
+    return this.request('/runs', {
       method: 'POST',
-      body: testRunData,
+      body,
     });
   }
 
   async listTestRuns(projectId) {
-    return this.request(`/projects/${projectId}/test-runs`);
+    // Use query param to get runs for a project: GET /runs?project_id=...
+    const query = projectId ? `?project_id=${projectId}` : '';
+    return this.request(`/runs${query}`);
   }
 
   async getTestRun(projectId, runId) {
-    return this.request(`/projects/${projectId}/test-runs/${runId}`);
+    // Keep signature for compatibility but call the canonical endpoint
+    return this.request(`/runs/${runId}`);
   }
 
   // Test Plans
@@ -160,14 +165,29 @@ async createProject(projectData) {
   }
 
   // Distributions
-  async listDistributions() {
+  async listDistributions(projectId) {
+    // Prefer project-scoped distributions: GET /projects/:project_id/distributions
+    if (projectId) return this.request(`/projects/${projectId}/distributions`);
     return this.request('/distributions');
   }
 
-  async createDistribution(distributionData) {
+  async createDistribution(projectId, distributionData) {
+    // POST /projects/:project_id/distributions
+    if (projectId) {
+      return this.request(`/projects/${projectId}/distributions`, {
+        method: 'POST',
+        body: distributionData,
+      });
+    }
     return this.request('/distributions', {
       method: 'POST',
       body: distributionData,
+    });
+  }
+
+  async deleteDistribution(distributionId) {
+    return this.request(`/distributions/${distributionId}`, {
+      method: 'DELETE',
     });
   }
 
@@ -197,6 +217,27 @@ async createProject(projectData) {
 
   async listRunItems(runId) {
     return this.request(`/runs/${runId}/items`);
+  }
+
+  async deleteRun(runId) {
+    return this.request(`/runs/${runId}`, { method: 'DELETE' });
+  }
+
+  async deleteTestCase(testCaseId) {
+    return this.request(`/test-cases/${testCaseId}`, { method: 'DELETE' });
+  }
+
+  async deleteTestCaseCategory(categoryId) {
+    return this.request(`/test-case-categories/${categoryId}`, { method: 'DELETE' });
+  }
+
+  // Test Plans management helpers (optional)
+  async updateTestPlan(planId, planData) {
+    return this.request(`/test-plans/${planId}`, { method: 'PUT', body: planData });
+  }
+
+  async deleteTestPlan(planId) {
+    return this.request(`/test-plans/${planId}`, { method: 'DELETE' });
   }
 
   // Project Statuses (уже есть)

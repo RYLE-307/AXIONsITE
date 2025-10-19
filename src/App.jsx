@@ -9,7 +9,7 @@ import './styles/dashboard.css';
 import './styles/home.css';
 import './styles/reports.css';
 
-// Импортируем из отдельного файла
+
 import { ROLES, hasPermission } from './utils/roles';
 
 function App() {
@@ -44,11 +44,11 @@ function App() {
   };
 
   const handleLogin = (user) => {
-    // Добавляем роль по умолчанию если не указана
+    
     const userWithRole = {
       ...user,
       role: user.role || ROLES.TESTER,
-      assignedProjects: user.assignedProjects || [] // Проекты, к которым имеет доступ пользователь
+      assignedProjects: user.assignedProjects || [] 
     };
     
     setCurrentUser(userWithRole);

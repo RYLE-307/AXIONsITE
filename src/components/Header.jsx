@@ -23,7 +23,7 @@ const Header = ({
           {/* Логотип и название */}
           <a href="/dashboard" className="logo">
             <img src={logoPath} alt="AxionLabs Logo" className="logo__image" />
-            <span className="logo__text">AxionLabs</span>
+           
           </a>
           
           {/* Элементы управления */}
@@ -53,7 +53,7 @@ const Header = ({
             {/* Кнопка создания проекта */}
             {canCreateProject && (
               <button 
-                className="btn btn--primary" 
+                className="btn btn-primary" 
                 onClick={() => setShowProjectModal(true)}
               >
                 <i className="fas fa-plus"></i>
@@ -70,10 +70,7 @@ const Header = ({
                   <span className="user-profile__name">
                     {currentUser.username || currentUser.name}
                   </span>
-                  <span className="user-profile__company">
-                    {currentUser.company}
-                  </span>
-                </div>
+                                 </div>
                 <div className="user-profile__role">
                   {getRoleDisplayName(currentUser.role)}
                 </div>
@@ -81,7 +78,7 @@ const Header = ({
             )}
             
             {/* Кнопка выхода */}
-            <button className="btn btn--outline" onClick={onLogout}>
+            <button className="btn btn-primary btn-logout" onClick={onLogout}>
               <i className="fas fa-sign-out-alt"></i>
               <span>Выйти</span>
             </button>
