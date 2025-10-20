@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId, initialData = null }) => {
+const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentProjectId, initialData = null }) => {
   const [formData, setFormData] = useState(initialData ? {
     name: initialData.name || '',
     description: initialData.description || '',
@@ -19,14 +19,15 @@ const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreate({
-      id: Date.now(),
+    const payload = {
       ...formData,
-      projectId: currentProjectId, 
-      createdAt: new Date().toISOString(),
-      testCaseCategories: [],
       selectedDistributions: formData.selectedDistributions
-    });
+    };
+    if (initialData && onSave) {
+      onSave(initialData.id, payload);
+    } else if (onCreate) {
+      onCreate(payload);
+    }
     onClose();
   };
 
@@ -47,6 +48,10 @@ const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId
           : [...prev.selectedDistributions, distroId]
       };
     });
+  };
+
+  const removeDistributionChip = (distroId) => {
+    setFormData(prev => ({ ...prev, selectedDistributions: prev.selectedDistributions.filter(id => id !== distroId) }));
   };
 
   return (
@@ -140,14 +145,30 @@ const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId
                         />
                         <div className="dist-main">
                           <div className="dist-name">{distro.name} <span className="dist-version">{distro.version}</span></div>
-                          <div className="dist-type">{distro.type}</div>
-                          {distro.description && <div className="dist-desc">{distro.description}</div>}
+                          <div className="dist-type muted">{distro.type}</div>
+                          {distro.description && <div className="dist-desc muted">{distro.description}</div>}
                         </div>
                       </label>
                     ))}
                 </div>
               )}
             </div>
+            {formData.selectedDistributions && formData.selectedDistributions.length > 0 && (
+              <div className="selected-distributions">
+                {formData.selectedDistributions.map(id => {
+                  const d = distributions.find(x => x.id === id);
+                  if (!d) return null;
+                  return (
+                    <div key={id} className="dist-chip">
+                      <span className="dist-chip-name">{d.name} <small className="muted">{d.version}</small></span>
+                      <button type="button" className="btn btn-icon" onClick={() => removeDistributionChip(id)}>
+                        <i className="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           
           <div className="form-actions">
@@ -155,7 +176,7 @@ const TestPlanModal = ({ onClose, onCreate, distributions = [], currentProjectId
               Отмена
             </button>
             <button type="submit" className="btn btn-primary">
-              Создать тест-план
+              {initialData ? 'Сохранить изменения' : 'Создать тест-план'}
             </button>
           </div>
         </form>

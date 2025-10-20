@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useToast } from '../UI/ToastContext';
 
 const TestRunModal = ({ onClose, onCreate, categories }) => {
+  const { addToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -20,7 +22,7 @@ const TestRunModal = ({ onClose, onCreate, categories }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedTestCases.length === 0) {
-      alert('Выберите хотя бы один тест-кейс для запуска');
+      addToast('Выберите хотя бы один тест-кейс для запуска', 'error');
       return;
     }
     onCreate({ ...formData, selectedTestCases });

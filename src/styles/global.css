@@ -83,6 +83,10 @@ body {
   background-color: var(--primary-dark);
 }
 
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+
+.btn-danger:hover { filter: brightness(0.95); }
+
 .btn-outline {
   background-color: transparent;
   color: var(--text-primary);
@@ -216,6 +220,19 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   animation: fadeIn 0.3s ease-out;
 }
+
+.modal-content .modal-body { padding: 1.25rem; }
+
+/* Cards */
+.card {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  box-shadow: 0 6px 18px var(--shadow-color);
+}
+
+.muted { color: var(--text-secondary); }
 
 .modal-header {
   display: flex;

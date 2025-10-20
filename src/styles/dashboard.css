@@ -370,6 +370,44 @@ header {
   align-items: center;
 }
 
+/* Test plans list */
+.plan-list {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.plan-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px dashed var(--border-color);
+}
+.plan-item:last-child { border-bottom: none; }
+.plan-info { display: flex; flex-direction: column; }
+.plan-desc { font-size: 13px; color: var(--text-secondary); }
+.plan-actions button { margin-left: 8px; }
+
+/* Distribution cards */
+.dist-cards { display: flex; flex-wrap: wrap; gap: 10px; }
+.dist-card { background: var(--bg-tertiary); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); min-width: 180px; }
+.dist-card--selectable { cursor: pointer; display:flex; gap:10px; align-items:flex-start; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.dist-card--selectable:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.18); }
+.dist-main { display:flex; flex-direction:column; }
+.dist-name { font-weight:600; }
+.dist-version { color: var(--text-secondary); font-size: 12px; margin-left:6px; }
+
+.modal-content .form-group { margin: 0.75rem 1.25rem; }
+.modal-content .form-actions { padding: 1rem; }
+
+.selected-distributions { display:flex; gap:8px; flex-wrap:wrap; padding: 10px 1rem; }
+.dist-chip { display:flex; align-items:center; gap:8px; background:var(--bg-tertiary); padding:6px 8px; border-radius:999px; border:1px solid var(--border-color); }
+.dist-chip .dist-chip-name { font-weight:600; font-size:13px; }
+.dist-chip .btn-icon { padding:6px; border-radius:50%; }
+
+
 .status-badge {
   padding: 5px 10px;
   border-radius: 20px;

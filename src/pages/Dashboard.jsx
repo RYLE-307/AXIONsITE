@@ -15,6 +15,7 @@ import TestExecutionModal from '../components/Dashboard/TestExecutionModal';
 import UserManagementModal from '../components/Dashboard/UserManagementModal';
 import { getRoleDisplayName } from '../utils/roles';
 import apiService from '../services/api';
+import { useToast } from '../components/UI/ToastContext';
 
 const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission }) => {
   // Состояния
@@ -35,6 +36,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedTestRun, setSelectedTestRun] = useState(null);
   const [showTestPlanModal, setShowTestPlanModal] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(null);
   const [showDistributionModal, setShowDistributionModal] = useState(false);
   const [showExecutionModal, setShowExecutionModal] = useState(false);
   const [currentExecutingTestRun, setCurrentExecutingTestRun] = useState(null);
@@ -49,6 +51,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
   const [draggedTestCase, setDraggedTestCase] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState({});
   const [users, setUsers] = useState([]);
+
+  const { addToast } = useToast();
 
   
   useEffect(() => {
@@ -84,7 +88,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
     setError('Ошибка загрузки данных. Проверьте подключение к серверу.');
     
     
-    alert('Не удалось загрузить данные. Проверьте подключение к интернету.');
+  addToast('Не удалось загрузить данные. Проверьте подключение к интернету.', 'error');
   } finally {
     setLoading(false);
   }
@@ -363,8 +367,8 @@ const loadDistributions = async () => {
 const createProject = async (projectData) => {
   console.log('createProject called with:', projectData); 
   
-  if (!canCreate('project')) {
-    alert('У вас нет прав для создания проектов');
+    if (!canCreate('project')) {
+    addToast('У вас нет прав для создания проектов', 'error');
     return;
   }
 
@@ -382,11 +386,11 @@ const createProject = async (projectData) => {
 
     setProjects(prev => [...prev, newProject]);
     setCurrentProjectId(newProject.id);
-    setShowProjectModal(false);
-    alert('Проект успешно создан!');
+  setShowProjectModal(false);
+  addToast('Проект успешно создан!', 'success');
   } catch (err) {
     console.error('Failed to create project:', err);
-    alert('Ошибка при создании проекта: ' + (err.message || 'Неизвестная ошибка'));
+    addToast('Ошибка при создании проекта: ' + (err.message || 'Неизвестная ошибка'), 'error');
   }
 };
   const createTestCaseCategory = async (categoryData) => {
@@ -394,21 +398,21 @@ const createProject = async (projectData) => {
       const payload = {
         name: categoryData.name,
         description: categoryData.description,
-        plan_id: currentPlanId || null
+        plan_id: categoryData.plan_id ? Number(categoryData.plan_id) : (currentPlanId || null)
       };
       await apiService.createTestCaseCategory(currentProjectId, payload);
       await loadTestCases(currentProjectId);
       setExpandedCategories(prev => ({ ...prev, [payload.id]: true }));
       setShowCategoryModal(false);
     } catch (err) {
-      alert('Ошибка при создании группы');
+      addToast('Ошибка при создании группы', 'error');
       console.error('Failed to create category:', err);
     }
   };
 
   const createTestCaseInCategory = async (testCaseData) => {
     if (!canCreate('testCase')) {
-      alert('У вас нет прав для создания тест-кейсов');
+      addToast('У вас нет прав для создания тест-кейсов', 'error');
       return;
     }
 
@@ -426,14 +430,14 @@ const createProject = async (projectData) => {
       await loadTestCases(currentProjectId);
       setShowTestCaseItemModal(false);
     } catch (err) {
-      alert('Ошибка при создании тест-кейса');
+      addToast('Ошибка при создании тест-кейса', 'error');
       console.error('Failed to create test case:', err);
     }
   };
 
   const createTestRun = async (formData) => {
     if (!canCreate('testRun')) {
-      alert('У вас нет прав для создания тест-ранов');
+      addToast('У вас нет прав для создания тест-ранов', 'error');
       return;
     }
 
@@ -449,14 +453,14 @@ const createProject = async (projectData) => {
       await loadTestRuns(currentProjectId);
       setShowTestRunModal(false);
     } catch (err) {
-      alert('Ошибка при создании тест-рана');
+      addToast('Ошибка при создании тест-рана', 'error');
       console.error('Failed to create test run:', err);
     }
   };
 
   const runTestRun = async (testRunId) => {
     if (!canRun()) {
-      alert('У вас нет прав для запуска тест-ранов');
+      addToast('У вас нет прав для запуска тест-ранов', 'error');
       return;
     }
 
@@ -474,7 +478,7 @@ const createProject = async (projectData) => {
     const testRun = testRuns.find(run => run.id === testRunId);
     
     if (!testRun || !testRun.tests || testRun.tests.length === 0) {
-      alert('В тест-ране нет тест-кейсов для выполнения');
+      addToast('В тест-ране нет тест-кейсов для выполнения', 'error');
       return;
     }
 
@@ -583,20 +587,20 @@ const createProject = async (projectData) => {
       })
     );
 
-    setShowExecutionModal(false);
-    setCurrentExecutingTestRun(null);
-    alert('Тест-ран завершен!');
+  setShowExecutionModal(false);
+  setCurrentExecutingTestRun(null);
+  addToast('Тест-ран завершен!', 'success');
   };
 
   const deleteTestRun = (testRunId) => {
     if (!window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) return;
     const remove = async () => {
       try {
-        await apiService.deleteRun(testRunId);
-        await loadTestRuns(currentProjectId);
+  await apiService.deleteRun(testRunId);
+  await loadTestRuns(currentProjectId);
       } catch (err) {
         console.error('Failed to delete run:', err);
-        alert('Не удалось удалить тест-ран');
+  addToast('Не удалось удалить тест-ран', 'error');
       }
     };
     remove();
@@ -606,11 +610,11 @@ const createProject = async (projectData) => {
     if (!window.confirm('Вы уверены, что хотите удалить этот тест-кейс?')) return;
     const remove = async () => {
       try {
-        await apiService.deleteTestCase(testCaseId);
-        await loadTestCases(currentProjectId);
+  await apiService.deleteTestCase(testCaseId);
+  await loadTestCases(currentProjectId);
       } catch (err) {
         console.error('Failed to delete test case:', err);
-        alert('Не удалось удалить тест-кейс');
+  addToast('Не удалось удалить тест-кейс', 'error');
       }
     };
     remove();
@@ -620,11 +624,11 @@ const createProject = async (projectData) => {
     if (!window.confirm('Вы уверены, что хотите удалить эту группу? Все тест-кейсы внутри нее также будут удалены.')) return;
     const remove = async () => {
       try {
-        await apiService.deleteTestCaseCategory(categoryId);
-        await loadTestCases(currentProjectId);
+  await apiService.deleteTestCaseCategory(categoryId);
+  await loadTestCases(currentProjectId);
       } catch (err) {
         console.error('Failed to delete category:', err);
-        alert('Не удалось удалить группу');
+  addToast('Не удалось удалить группу', 'error');
       }
     };
     remove();
@@ -637,8 +641,8 @@ const createProject = async (projectData) => {
       projectId: currentProjectId
     };
     setManualReports([...manualReports, newReport]);
-    setShowManualReportModal(false);
-    alert('Отчет успешно сохранен!');
+  setShowManualReportModal(false);
+  addToast('Отчет успешно сохранен!', 'success');
   };
 
   const createTestPlan = (planData) => {
@@ -652,26 +656,63 @@ const createProject = async (projectData) => {
           scope: planData.scope,
           selected_distributions: planData.selectedDistributions || []
         };
-        await apiService.createTestPlan(currentProjectId, payload);
-        await loadTestPlans(currentProjectId);
-        setShowTestPlanModal(false);
+  await apiService.createTestPlan(currentProjectId, payload);
+  await loadTestPlans(currentProjectId);
+  setShowTestPlanModal(false);
       } catch (err) {
         console.error('Failed to create test plan:', err);
-        alert('Не удалось создать тест-план');
+  addToast('Не удалось создать тест-план', 'error');
       }
     };
     create();
   };
 
+  const updateTestPlan = (planId, planData) => {
+    const update = async () => {
+      try {
+        await apiService.updateTestPlan(planId, {
+          name: planData.name,
+          description: planData.description,
+          selected_distributions: planData.selectedDistributions || []
+        });
+        await loadTestPlans(currentProjectId);
+      } catch (err) {
+        console.error('Failed to update test plan:', err);
+        addToast('Не удалось обновить тест-план', 'error');
+      }
+    };
+    update();
+  };
+
+  const editTestPlan = (plan) => {
+    setEditingPlan(plan);
+    setShowTestPlanModal(true);
+  };
+
+  const deleteTestPlan = (planId) => {
+    if (!window.confirm('Вы уверены, что хотите удалить этот тест-план?')) return;
+    const remove = async () => {
+      try {
+        await apiService.deleteTestPlan(planId);
+        await loadTestPlans(currentProjectId);
+        addToast('Тест-план удалён', 'success');
+      } catch (err) {
+        console.error('Failed to delete test plan:', err);
+        addToast('Не удалось удалить тест-план', 'error');
+      }
+    };
+    remove();
+  };
+
   const createDistribution = (distroData) => {
     const create = async () => {
       try {
-        const created = await apiService.createDistribution(currentProjectId, distroData);
-        setDistributions(prev => [...prev, created]);
-        setShowDistributionModal(false);
+  const created = await apiService.createDistribution(currentProjectId, distroData);
+  setDistributions(prev => [...prev, created]);
+  setShowDistributionModal(false);
       } catch (err) {
         console.error('Failed to create distribution:', err);
-        alert('Не удалось создать дистрибутив');
+  addToast('Не удалось создать дистрибутив', 'error');
       }
     };
     create();
@@ -690,7 +731,7 @@ const createProject = async (projectData) => {
         })));
       } catch (err) {
         console.error('Failed to delete distribution:', err);
-        alert('Не удалось удалить дистрибутив');
+        addToast('Не удалось удалить дистрибутив', 'error');
       }
     };
     remove();
@@ -937,6 +978,27 @@ const createProject = async (projectData) => {
                     <i className="fas fa-server"></i> Управление дистрибутивами
                   </button>
                 )}
+          </div>
+          {/* Список планов с действиями */}
+          <div className="plan-list">
+            {testPlans.filter(plan => plan.projectId === currentProjectId).length === 0 ? (
+              <p className="no-plans">Нет тест-планов для этого проекта.</p>
+            ) : (
+              <div className="plan-items">
+                {testPlans.filter(plan => plan.projectId === currentProjectId).map(plan => (
+                  <div key={plan.id} className="plan-item">
+                    <div className="plan-info">
+                      <strong>{plan.name}</strong> {plan.version ? `v${plan.version}` : ''}
+                      <div className="plan-desc">{plan.description}</div>
+                    </div>
+                    <div className="plan-actions">
+                      <button className="btn btn-sm btn-outline" onClick={() => editTestPlan(plan)}>Редактировать</button>
+                      <button className="btn btn-sm btn-danger" onClick={() => deleteTestPlan(plan.id)}>Удалить</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -1302,7 +1364,9 @@ const createProject = async (projectData) => {
       {showCategoryModal && (
         <TestCaseCategoryModal 
           onClose={() => setShowCategoryModal(false)} 
-          onCreate={createTestCaseCategory} 
+          onCreate={createTestCaseCategory}
+          testPlans={testPlans}
+          currentProjectId={currentProjectId}
         />
       )}
 
@@ -1332,10 +1396,12 @@ const createProject = async (projectData) => {
 
       {showTestPlanModal && (
         <TestPlanModal 
-          onClose={() => setShowTestPlanModal(false)} 
+          onClose={() => { setShowTestPlanModal(false); setEditingPlan(null); }} 
           onCreate={createTestPlan}
+          onSave={updateTestPlan}
           distributions={distributions}
           currentProjectId={currentProjectId}
+          initialData={editingPlan}
         />
       )}
 

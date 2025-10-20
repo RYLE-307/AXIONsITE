@@ -1,13 +1,15 @@
 import React from 'react';
 import '../styles/global.css';
 import '../styles/home.css';
+import { useToast } from '../components/UI/ToastContext';
 
 const LandingPage = ({ theme, toggleTheme }) => {
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
-    alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.');
+    addToast('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.', 'success');
     e.target.reset();
   };
+  const { addToast } = useToast();
 const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
   return (
     <div className="landing-page">

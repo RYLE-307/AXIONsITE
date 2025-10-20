@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import '../styles/auth.css';
 import '../styles/global.css';
+import { useToast } from '../components/UI/ToastContext';
 
 const AuthPage = ({ onLogin }) => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [users, setUsers] = useState([]);
+  const { addToast } = useToast();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -16,12 +18,12 @@ const AuthPage = ({ onLogin }) => {
     const role = e.target.elements.registerRole?.value || 'tester';
 
     if (password !== confirmPassword) {
-      alert('Пароли не совпадают');
+      addToast('Пароли не совпадают', 'error');
       return;
     }
 
     if (users.some(u => u.email === email)) {
-      alert('Пользователь с таким email уже зарегистрирован');
+      addToast('Пользователь с таким email уже зарегистрирован', 'error');
       return;
     }
 
@@ -46,7 +48,7 @@ const AuthPage = ({ onLogin }) => {
     const password = e.target.elements.loginPassword.value;
     const user = users.find(u => u.email === email && u.password === password);
     if (!user) {
-      alert('Неверный email или пароль');
+  addToast('Неверный email или пароль', 'error');
       return;
     }
     onLogin(user);

@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import { ToastProvider } from './components/UI/ToastContext';
 import './styles/global.css';
 import './styles/auth.css';
 import './styles/dashboard.css';
 import './styles/home.css';
 import './styles/reports.css';
+import './styles/toast.css';
 
 
 import { ROLES, hasPermission } from './utils/roles';
@@ -63,8 +65,9 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="app">
+    <ToastProvider>
+      <Router>
+        <div className="app">
         <Routes>
           <Route 
             path="/" 
@@ -93,8 +96,9 @@ function App() {
             } 
           />
         </Routes>
-      </div>
-    </Router>
+        </div>
+      </Router>
+    </ToastProvider>
   );
 }
 

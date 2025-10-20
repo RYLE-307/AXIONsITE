@@ -1,4 +1,5 @@
 import React from 'react';
+import { useToast } from '../UI/ToastContext';
 
 const ReportModal = ({ testRun, onClose }) => {
 
@@ -33,6 +34,8 @@ const ReportModal = ({ testRun, onClose }) => {
     }
     return date;
   };
+
+  const { addToast } = useToast();
 
   return (
     <div className="modal active">
@@ -118,10 +121,10 @@ const ReportModal = ({ testRun, onClose }) => {
           ))}
           
           <div className="form-actions">
-            <button className="btn btn-outline" onClick={() => alert('Функция экспорта в PDF будет реализована в полной версии')}>
+            <button className="btn btn-outline" onClick={() => addToast('Функция экспорта в PDF будет реализована в полной версии', 'info')}>
               <i className="fas fa-file-pdf"></i> Экспорт в PDF
             </button>
-            <button className="btn btn-outline" onClick={() => alert('Функция экспорта в CSV будет реализована в полной версии')}>
+            <button className="btn btn-outline" onClick={() => addToast('Функция экспорта в CSV будет реализована в полной версии', 'info')}>
               <i className="fas fa-file-csv"></i> Экспорт в CSV
             </button>
             <button className="btn btn-primary" onClick={onClose}>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-const TestCaseCategoryModal = ({ onClose, onCreate }) => {
+const TestCaseCategoryModal = ({ onClose, onCreate, testPlans = [], currentProjectId = null }) => {
   const [categoryName, setCategoryName] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
+  const [selectedPlanId, setSelectedPlanId] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,7 +13,8 @@ const TestCaseCategoryModal = ({ onClose, onCreate }) => {
       id: Date.now(),
       name: categoryName,
       description: categoryDescription,
-      testCases: []
+  plan_id: selectedPlanId || null,
+  testCases: []
     });
     onClose();
   };
@@ -45,6 +47,16 @@ const TestCaseCategoryModal = ({ onClose, onCreate }) => {
               onChange={(e) => setCategoryDescription(e.target.value)}
               placeholder="Опишите назначение" 
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="categoryPlan">Привязать к тест-плану (необязательно)</label>
+            <select id="categoryPlan" value={selectedPlanId} onChange={(e) => setSelectedPlanId(e.target.value)}>
+              <option value="">-- Без плана --</option>
+              {testPlans.map(plan => (
+                <option key={plan.id} value={plan.id}>{plan.name}</option>
+              ))}
+            </select>
           </div>
           
           <div className="form-actions">

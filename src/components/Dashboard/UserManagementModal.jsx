@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '../../components/UI/ToastContext';
 import { getRoleDisplayName } from '../../utils/roles'; 
 
 
@@ -6,10 +7,11 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [userRole, setUserRole] = useState('');
+  const { addToast } = useToast();
 
   const handleAssignProject = () => {
     if (!selectedUserId || !selectedProjectId) {
-      alert('Выберите пользователя и проект');
+      addToast('Выберите пользователя и проект', 'error');
       return;
     }
 
@@ -20,7 +22,7 @@ const UserManagementModal = ({ onClose, users, projects, currentUser, onUpdateUs
 
   const handleChangeRole = () => {
     if (!selectedUserId || !userRole) {
-      alert('Выберите пользователя и роль');
+      addToast('Выберите пользователя и роль', 'error');
       return;
     }
 

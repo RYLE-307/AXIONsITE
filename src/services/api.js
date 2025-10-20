@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'http://localhost:8080/api'; //порт под бэкенд
+const API_BASE_URL = 'http://localhost:9090/api'; //порт под бэкенд
 
 class ApiService {
   constructor() {
@@ -36,12 +36,21 @@ class ApiService {
       }
       
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorText = await response.text().catch(() => '');
+        let errorData = {};
+        try { errorData = errorText ? JSON.parse(errorText) : {}; } catch (e) { errorData = { message: errorText }; }
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      return data;
+      // Handle empty responses (204 No Content)
+      const text = await response.text();
+      if (!text) return null;
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        // If response is not JSON, return raw text
+        return text;
+      }
     } catch (error) {
       console.error('API request failed:', error);
       throw error;
