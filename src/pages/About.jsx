@@ -11,7 +11,27 @@ const About = ({ theme, toggleTheme }) => {
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
-    e.target.reset();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+    setMessageType('');
+
+    try {
+      await emailjs.sendForm(
+        'service_zgm9uap', // Замените на ваш Service ID из EmailJS
+        'template_g1ls0zg', // Замените на ваш Template ID
+        e.target,
+        'JRXdjzxl5wloLMLHS' // Замените на ваш Public Key
+      );
+      setSubmitMessage('Спасибо! Ваше сообщение отправлено.');
+      setMessageType('success');
+      e.target.reset();
+    } catch (error) {
+      setSubmitMessage('Ошибка отправки. Попробуйте позже.');
+      setMessageType('error');
+      console.error('EmailJS error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
 
