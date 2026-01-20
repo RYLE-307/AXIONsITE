@@ -1,6 +1,6 @@
 {
   "name": "axionlabs-site",
-   "homepage": "https:///RYLE-307.github.io/AXIONsITE",
+   "homepage": "https:///RYLE-307.github.io/AxionLabs",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +16,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "set HOMEPAGE=https://ryle-307.github.io/AXIONsITE && npm run build",
+    "predeploy": "set HOMEPAGE=https://ryle-307.github.io/AxionLabs && npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
