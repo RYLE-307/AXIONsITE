@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
-import { useToast } from '../components/UI/ToastContext';
 const firstImg = '/img/first.jpg';
 const secondImg = '/img/second.jpg';
 const thirdImg = '/img/third.jpg';
@@ -9,7 +9,6 @@ const fourthImg = '/img/fourth.jpg';
 
 
 const Products = ({ theme, toggleTheme }) => {
-  const { addToast } = useToast();
   const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -21,11 +20,11 @@ const Products = ({ theme, toggleTheme }) => {
       <header className="landing-header">
         <div className="container">
           <nav className="landing-nav">
-            <a href="/" className="landing-logo">
+            <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
-            </a>
+            </Link>
             <div className="landing-auth">
-              <a href="/products" className="btn btn-primary">Продукты</a>
+              <Link to="/" className="btn btn-primary">Главная</Link>
               <button className="theme-toggle" onClick={toggleTheme}>
                 <i className={theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}></i>
               </button>
@@ -132,8 +131,8 @@ const Products = ({ theme, toggleTheme }) => {
             <div className="footer-section">
               <h3 className="footer-title">Быстрые ссылки</h3>
               <ul className="footer-links">
-                <li><a href="/">Главная</a></li>
-                <li><a href="/products">Продукты</a></li>
+                <li><Link to="/">Главная</Link></li>
+                <li><Link to="/products">Продукты</Link></li>
                
               </ul>
             </div>

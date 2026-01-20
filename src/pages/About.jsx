@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
 
@@ -14,11 +15,11 @@ const About = ({ theme, toggleTheme }) => {
       <header className="landing-header">
         <div className="container">
           <nav className="landing-nav">
-            <a href="/" className="landing-logo">
+            <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
-            </a>
+            </Link>
             <div className="landing-auth">
-              <a href="/products" className="btn btn-primary">Продукты</a>
+              <Link to="/products" className="btn btn-primary">Продукты</Link>
               <button className="theme-toggle" onClick={toggleTheme}>
                 <i className={theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}></i>
               </button>

@@ -33,7 +33,7 @@ function App() {
 
   return (
     <ToastProvider>
-      <Router>
+      <Router basename={process.env.NODE_ENV === 'production' ? '/AXIONsITE' : ''}>
         <div className="app">
           <Routes>
             <Route path="/" element={<About theme={theme} toggleTheme={toggleTheme} />} />
