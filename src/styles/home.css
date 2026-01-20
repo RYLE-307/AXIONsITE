@@ -636,3 +636,20 @@
   object-fit: contain;
   border-radius: 10px;
 }
+
+.submit-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+  color: white;
+}
+
+.submit-message.success {
+  background: var(--success);
+}
+
+.submit-message.error {
+  background: var(--danger);
+}

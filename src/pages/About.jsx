@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
+import emailjs from '@emailjs/browser';
 
 const About = ({ theme, toggleTheme }) => {
-  const handleFeedbackSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     e.target.reset();
   };
@@ -189,21 +194,24 @@ const About = ({ theme, toggleTheme }) => {
             <form onSubmit={handleFeedbackSubmit}>
               <div className="form-group">
                 <label htmlFor="feedbackName">Имя</label>
-                <input type="text" id="feedbackName" required placeholder="Введите ваше имя" />
+                <input type="text" id="feedbackName" name="from_name" required placeholder="Введите ваше имя" />
               </div>
 
               <div className="form-group">
                 <label htmlFor="feedbackEmail">Email</label>
-                <input type="email" id="feedbackEmail" required placeholder="Введите ваш email" />
+                <input type="email" id="feedbackEmail" name="from_email" required placeholder="Введите ваш email" />
               </div>
 
               <div className="form-group">
                 <label htmlFor="feedbackMessage">Сообщение</label>
-                <textarea id="feedbackMessage" required placeholder="Расскажите о вашем проекте или задайте вопрос"></textarea>
+                <textarea id="feedbackMessage" name="message" required placeholder="Расскажите о вашем проекте или задайте вопрос"></textarea>
               </div>
 
-              <button type="submit" className="btn btn-primary">Отправить сообщение</button>
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
+              </button>
             </form>
+            {submitMessage && <p className={`submit-message ${messageType}`}>{submitMessage}</p>}
           </div>
         </div>
       </section>
