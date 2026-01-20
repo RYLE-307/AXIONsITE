@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/AXIONsITE/static/css/main.ba65b1f2.css",
+    "main.js": "/AXIONsITE/static/js/main.9c029fa2.js",
+    "static/js/453.026aae32.chunk.js": "/AXIONsITE/static/js/453.026aae32.chunk.js",
+    "index.html": "/AXIONsITE/index.html",
+    "main.ba65b1f2.css.map": "/AXIONsITE/static/css/main.ba65b1f2.css.map",
+    "main.9c029fa2.js.map": "/AXIONsITE/static/js/main.9c029fa2.js.map",
+    "453.026aae32.chunk.js.map": "/AXIONsITE/static/js/453.026aae32.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ba65b1f2.css",
+    "static/js/main.9c029fa2.js"
+  ]
+}
