@@ -18,9 +18,9 @@
   --transition: 180ms cubic-bezier(.2,.9,.2,1);
 
   /* Темная тема по умолчанию */
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #2d2d2d;
+  --bg-primary: #333333;
+  --bg-secondary: #404040;
+  --bg-tertiary: #555555;
   --text-primary: #e0e0e0;
   --text-secondary: #a0a0a0;
   --text-tertiary: #808080;
@@ -47,6 +47,7 @@
 
 .logo{
   width: 70px;
+  height: auto;
 }
 
 body {
@@ -408,6 +409,12 @@ textarea:focus {
     padding: 0 1rem;
   }
   
+  .btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+  
   .modal-content {
     width: 95%;
     margin: 1.25rem;
@@ -424,5 +431,49 @@ textarea:focus {
   .radio-group {
     flex-direction: column;
     gap: 0.5rem;
+  }
+  
+  .landing-header {
+    padding: 15px 0;
+  }
+  
+  .landing-nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .landing-auth {
+    flex-direction: row;
+    width: auto;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .btn {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  h3 {
+    font-size: 18px;
+  }
+  
+  p {
+    font-size: 14px;
   }
 }

@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
-import { useToast } from '../components/UI/ToastContext';
-import firstImg from '../img/first.jpg';
-import secondImg from '../img/second.jpg';
-import thirdImg from '../img/third.jpg';
-import fourthImg from '../img/fourth.jpg';
+const firstImg = process.env.PUBLIC_URL + '/img/first.jpg';
+const secondImg = process.env.PUBLIC_URL + '/img/second.jpg';
+const thirdImg = process.env.PUBLIC_URL + '/img/third.jpg';
+const fourthImg = process.env.PUBLIC_URL + '/img/fourth.jpg';
 
 
 const Products = ({ theme, toggleTheme }) => {
-  const { addToast } = useToast();
-  const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
   const [selectedImage, setSelectedImage] = useState(null);
 
   const openModal = (src) => setSelectedImage(src);
@@ -21,11 +20,11 @@ const Products = ({ theme, toggleTheme }) => {
       <header className="landing-header">
         <div className="container">
           <nav className="landing-nav">
-            <a href="/" className="landing-logo">
+            <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
-            </a>
+            </Link>
             <div className="landing-auth">
-              <a href="/products" className="btn btn-primary">Продукты</a>
+              <Link to="/" className="btn btn-primary">Главная</Link>
               <button className="theme-toggle" onClick={toggleTheme}>
                 <i className={theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}></i>
               </button>
@@ -40,15 +39,9 @@ const Products = ({ theme, toggleTheme }) => {
           <div className="hero-content">
             <div className="hero-text">
               <h1 className="hero-title">Наши продукты</h1>
-              <p className="hero-subtitle">Инновационные решения для управления тестированием</p>
+             
 
               
-            </div>
-
-            <div className="hero-image">
-              <div className="hero-image-placeholder">
-                AxionLabs Products
-              </div>
             </div>
           </div>
         </div>
@@ -56,9 +49,13 @@ const Products = ({ theme, toggleTheme }) => {
 
       <section className="products-section">
         <div className="container">
-          <h2 className="section-title">AxionLabs TMP (Test Management Platform) <span className="status-badge">В разработке</span></h2>
+          <h2 className="section-title">AxionTMP (Test Management Platform) <span className="status-badge status-developing"><i className="fas fa-tools"></i> В разработке</span></h2>
+          <p className="status-description">
+            <strong>Статус проекта:</strong> Активная разработка. Мы работаем над созданием полнофункциональной платформы для управления тестированием. 
+            Ожидаемый релиз:2026 год. Следите за обновлениями!
+          </p>
           <p className="product-description">
-           Axion TMP - это современное веб-приложение от компании AxionLabs для управления процессом тестирования программного обеспечения. Платформа предоставляет комплексный инструментарий для создания, организации и выполнения тестов, а также генерации детальных отчетов. 
+           AxionTMP - это современное веб-приложение от компании AxionLabs для управления процессом тестирования программного обеспечения. Платформа предоставляет комплексный инструментарий для создания, организации и выполнения тестов, а также генерации детальных отчетов. 
           </p>
           <p className="product-description">
             Организация тестов - Структурированное хранение и категоризация тест-кейсов
@@ -70,6 +67,43 @@ const Products = ({ theme, toggleTheme }) => {
             <li><strong>Анализ результатов</strong> - Генерация отчетов и метрик тестирования</li>
             <li><strong>Отслеживание дефектов</strong> - Ведение истории найденных ошибок и их статусов</li>
           </ul>
+
+          <h3>Назначение</h3>
+          <p className="product-description">
+            AxionTMP предназначена для централизованного управления процессом QA и тестирования в организациях. Платформа решает следующие задачи: организация тестов, управление проектами, управление командой, автоматизация процессов, анализ результатов и отслеживание дефектов.
+          </p>
+
+          <h3>Почему AxionTMP?</h3>
+          <ul className="product-list">
+            <li><strong>Интеграция в один инструмент</strong> - Все процессы QA в одном месте</li>
+            <li><strong>Удобный интерфейс</strong> - Интуитивный дизайн для быстрого освоения</li>
+            <li><strong>Гибкость</strong> - Адаптация под различные методологии тестирования</li>
+            <li><strong>Масштабируемость</strong> - Поддержка как малых, так и крупных проектов</li>
+            <li><strong>Аналитика</strong> - Детальные отчеты и метрики для улучшения качества</li>
+          </ul>
+
+          <h3>Основные возможности</h3>
+          <div className="features-details">
+            <h4>📋 Управление тест-кейсами</h4>
+            <p>Категории тест-кейсов, Drag & Drop, гибкая классификация, приоритизация и теги для быстрого поиска.</p>
+
+            <h4>🧪 Управление тест-ранами</h4>
+            <p>Автоматические и ручные прогоны, интеллектуальный выбор тестов, отслеживание прогресса и история прогонов.</p>
+
+            <h4>📊 Система отчетности</h4>
+            <p>Автоматические и ручные отчеты, визуализация данных, экспорт в PDF/CSV и метрики качества.</p>
+
+            <h4>👥 Управление пользователями</h4>
+            <p>Роли пользователей, детальное распределение прав, приглашение членов команды и профили пользователей.</p>
+
+            <h4>🏗️ Управление проектами</h4>
+            <p>Создание проектов, иерархия плана тестирования, распределение ответственности и версионирование.</p>
+          </div>
+
+          <h3>🎨 Пользовательский интерфейс</h3>
+          <p className="product-description">
+            Темная/светлая тема для комфортной работы в зависимости от предпочтений пользователя.
+          </p>
 
           <div className="product-features">
             <div className="feature-item">
@@ -99,13 +133,13 @@ const Products = ({ theme, toggleTheme }) => {
                 <img src={firstImg} alt="Скриншот 1" onClick={() => openModal(firstImg)} style={{ cursor: 'pointer' }} />
               </div>
               <div className="screenshot-placeholder">
-                <img src={secondImg} alt="Скриншот 2" onClick={() => openModal(firstImg)} style={{ cursor: 'pointer' }} />
+                <img src={secondImg} alt="Скриншот 2" onClick={() => openModal(secondImg)} style={{ cursor: 'pointer' }} />
               </div>
                <div className="screenshot-placeholder">
-                <img src={thirdImg} alt="Скриншот 3" onClick={() => openModal(firstImg)} style={{ cursor: 'pointer' }} />
+                <img src={thirdImg} alt="Скриншот 3" onClick={() => openModal(thirdImg)} style={{ cursor: 'pointer' }} />
               </div>
                <div className="screenshot-placeholder">
-                <img src={fourthImg} alt="Скриншот 4" onClick={() => openModal(firstImg)} style={{ cursor: 'pointer' }} />
+                <img src={fourthImg} alt="Скриншот 4" onClick={() => openModal(fourthImg)} style={{ cursor: 'pointer' }} />
               </div>
             </div>
           </div>
@@ -118,13 +152,14 @@ const Products = ({ theme, toggleTheme }) => {
             <div className="footer-section">
               <h3 className="footer-title">AxionLabs</h3>
               <p>Профессиональная разработка программного обеспечения</p>
+                <img src={logoPath} alt="AxionLabs Logo" className="footer-logo" />
             </div>
 
             <div className="footer-section">
               <h3 className="footer-title">Контакты</h3>
               <ul className="footer-links">
                 <li><i className="fas fa-envelope"></i><a href="mailto:info@AxionLabs.ru">info@AxionLabs.ru</a></li>
-                <li><i className="fas fa-phone"></i> <a href="tel:+7(999)123-45-67">+7 (999) 123-45-67</a></li>
+                <li><i className="fas fa-phone"></i> <a href="tel:+7(999)123-45-67">+7 (999) 672-67-47</a></li>
                 <li><i className="fas fa-map-marker-alt"></i> Москва, Россия</li>
               </ul>
             </div>
@@ -132,8 +167,8 @@ const Products = ({ theme, toggleTheme }) => {
             <div className="footer-section">
               <h3 className="footer-title">Быстрые ссылки</h3>
               <ul className="footer-links">
-                <li><a href="/">Главная</a></li>
-                <li><a href="/products">Продукты</a></li>
+                <li><Link to="/">Главная</Link></li>
+                <li><Link to="/products">Продукты</Link></li>
                
               </ul>
             </div>
