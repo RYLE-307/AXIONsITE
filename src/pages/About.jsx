@@ -33,6 +33,7 @@ const About = ({ theme, toggleTheme }) => {
       setIsSubmitting(false);
     }
   };
+
   const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
 
   return (
@@ -43,8 +44,12 @@ const About = ({ theme, toggleTheme }) => {
             <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
             </Link>
+            <div className="landing-nav-links">
+              <Link to="/" className="nav-link">Главная</Link>
+              <Link to="/portfolio" className="nav-link">Портфолио</Link>
+              <Link to="/contacts" className="nav-link">Контакты</Link>
+            </div>
             <div className="landing-auth">
-              <Link to="/products" className="btn btn-primary">Продукты</Link>
               <button className={`theme-toggle ${theme}`} onClick={toggleTheme}>
                 <i className="fas fa-circle-half-stroke"></i>
               </button>
@@ -53,182 +58,198 @@ const About = ({ theme, toggleTheme }) => {
         </div>
       </header>
 
-      <section className="hero-section">
+      <section className="hero-section enhanced-hero">
         <div className="container">
           <div className="hero-content">
-            <div className="hero-text">
-              <div className="hero-header-row">
-                <div className="hero-header-text">
-                  <h1 className="hero-title">AxionLabs - Разработка программного обеспечения</h1>
-                  <p className="hero-subtitle">Инновационные решения для вашего бизнеса</p>
-                </div>
+            <div className="hero-category-tag">ВЕБ-ПРИЛОЖЕНИЯ</div>
+            <h1 className="hero-title enhanced-title">СОЗДАЕМ ЛУЧШИЕ ЦИФРОВЫЕ РЕШЕНИЯ ДЛЯ БИЗНЕСА</h1>
+            <p className="hero-subtitle enhanced-subtitle">РУССКОЯЗЫЧНАЯ КОМПАНИЯ ДЛЯ ИННОВАЦИОННЫХ IT-РЕШЕНИЙ</p>
 
-                <div className="hero-image">
-                  <div className="hero-image-placeholder">
-                    AxionLabs
-                  </div>
-                </div>
+            <div className="hero-works-tags">
+              <span className="work-tag">Исследование</span>
+              <span className="work-tag">Дизайн</span>
+              <span className="work-tag">Frontend разработка</span>
+              <span className="work-tag">Backend разработка</span>
+              <span className="work-tag">Тестирование</span>
+              <span className="work-tag">Документация</span>
+            </div>
+
+            <div className="stats-grid">
+              <div className="stat-item">
+                <div className="stat-number">3+</div>
+                <div className="stat-label">лет опыта</div>
               </div>
+              <div className="stat-item">
+                <div className="stat-number">10+</div>
+                <div className="stat-label">сотрудников</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">50+</div>
+                <div className="stat-label">клиентов</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">80%</div>
+                <div className="stat-label">повторных заказов</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">100+</div>
+                <div className="stat-label">выполненных проектов</div>
+              </div>
+            </div>
 
-              <div className="hero-features">
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-code"></i>
-                  </div>
-                  <span>Разработка веб-приложений</span>
-                </div>
-               
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-cloud"></i>
-                  </div>
-                  <span>Облачные решения</span>
-                </div>
+            <a href="#contact" className="btn btn-primary hero-cta">
+              <i className="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ ПРОЕКТА
+            </a>
+          </div>
+        </div>
+      </section>
 
+      <section className="unique-solutions-section">
+        <div className="container">
+          <h2 className="section-title">УНИКАЛЬНЫЕ РЕШЕНИЯ</h2>
+          
+          <div className="solutions-content">
+            <div className="solution-text">
+              <h3>ВАЖНОЕ ПРЕИМУЩЕСТВО ПРИ РАБОТЕ С НАМИ</h3>
+              <p>При работе с нами, Вы получаете исключительное право собственности на продукт. Мы не станем повторять Ваш программный код в других проектах. Для нас каждый проект уникален, а Вы - его владелец.</p>
               
-
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-flask"></i>
-                  </div>
-                  <span>Тестирование ПО</span>
-                </div>
-
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-palette"></i>
-                  </div>
-                  <span>UI/UX дизайн</span>
-                </div>
-
-                              </div>
-
-              <a href="#contact" className="btn btn-primary">
-                <i className="fas fa-envelope"></i> Связаться с нами
-              </a>
+              <h3>ДЛЯ ОБЕСПЕЧЕНИЯ ВЫСОКОЙ ПРОИЗВОДИТЕЛЬНОСТИ ВЫБИРАЕМ:</h3>
+              <ul className="tech-stack">
+                <li>React.js для современных веб-приложений</li>
+                <li>Node.js для backend-разработки</li>
+                <li>Python для аналитики и AI</li>
+                <li>Облачные платформы (AWS, Azure)</li>
+                <li>Современные базы данных</li>
+              </ul>
+              
+              <p>Развивающемуся бизнесу часто становится мало готовых сервис-решений, и требуется индивидуальная система, способная покрыть все действующие потребности.</p>
+              <p>Мы обеспечиваем полный цикл разработки от архитектурных решений до регулярных релизов и поддержки.</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-section">
-        <div className="container">
-          <h2 className="section-title">О компании AxionLabs</h2>
-          <p className="about-description">
-            AxionLabs - это команда профессионалов, специализирующихся на разработке современного программного обеспечения.
-            Мы создаем инновационные решения, которые помогают бизнесу расти и развиваться в цифровую эпоху.
-          </p>
-          <p className="about-description">
-            Наша экспертиза включает разработку веб-приложений, мобильных приложений, облачных решений и систем управления тестированием.
-            Мы стремимся к качеству, инновациям и удовлетворению потребностей наших клиентов.
-          </p>
-        </div>
-      </section>
-
-      <section className="features-section">
-        <div className="container">
-          <h2 className="section-title">Наши услуги</h2>
-
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-card-icon">
+            
+            <div className="solution-image">
+              <div className="placeholder-image">
                 <i className="fas fa-code"></i>
+                <span>Инновационные технологии</span>
               </div>
-              <h3 className="feature-card-title">Веб-разработка</h3>
-              <p className="feature-card-desc">Создание современных веб-приложений с использованием передовых технологий</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-mobile-alt"></i>
-              </div>
-              <h3 className="feature-card-title">Мобильная разработка</h3>
-              <p className="feature-card-desc">Разработка нативных и кросс-платформенных мобильных приложений</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-cloud"></i>
-              </div>
-              <h3 className="feature-card-title">Облачные решения</h3>
-              <p className="feature-card-desc">Миграция и разработка приложений в облачной среде</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-flask"></i>
-              </div>
-              <h3 className="feature-card-title">Тестирование ПО</h3>
-              <p className="feature-card-desc">Комплексное тестирование и управление качеством программного обеспечения</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-palette"></i>
-              </div>
-              <h3 className="feature-card-title">UI/UX дизайн</h3>
-              <p className="feature-card-desc">Создание интуитивного и привлекательного пользовательского интерфейса</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-cogs"></i>
-              </div>
-              <h3 className="feature-card-title">DevOps</h3>
-              <p className="feature-card-desc">Автоматизация процессов разработки и развертывания приложений</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-chart-line"></i>
-              </div>
-              <h3 className="feature-card-title">Аналитика и BI</h3>
-              <p className="feature-card-desc">Разработка систем аналитики и бизнес-интеллекта для принятия решений</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-shield-alt"></i>
-              </div>
-              <h3 className="feature-card-title">Кибербезопасность</h3>
-              <p className="feature-card-desc">Защита приложений и данных от киберугроз и уязвимостей</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-card-icon">
-                <i className="fas fa-user-tie"></i>
-              </div>
-              <h3 className="feature-card-title">Консалтинг и аудит</h3>
-              <p className="feature-card-desc">Профессиональные консультации и анализ существующих систем</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="contact" className="contact-section">
+      <section id="portfolio" className="portfolio-section">
         <div className="container">
-          <h2 className="section-title">Свяжитесь с нами</h2>
+          <h2 className="section-title">ПОРТФОЛИО</h2>
+          
+          <div className="portfolio-grid">
+            <div className="portfolio-item">
+              <img src={process.env.PUBLIC_URL + '/img/first.jpg'} alt="Проект 1" />
+              <div className="portfolio-overlay">
+                <h4>AxionTMP - Test Management Platform</h4>
+                <p>Платформа для управления тестированием ПО</p>
+                <Link to="/products" className="btn btn-secondary">Подробнее</Link>
+              </div>
+            </div>
+            <div className="portfolio-item">
+              <img src={process.env.PUBLIC_URL + '/img/second.jpg'} alt="Проект 2" />
+              <div className="portfolio-overlay">
+                <h4>Веб-приложение для бизнеса</h4>
+                <p>Индивидуальное решение для компании</p>
+                <a href="#contact" className="btn btn-secondary">Связаться</a>
+              </div>
+            </div>
+            <div className="portfolio-item">
+              <img src={process.env.PUBLIC_URL + '/img/third.jpg'} alt="Проект 3" />
+              <div className="portfolio-overlay">
+                <h4>Мобильное приложение</h4>
+                <p>Кросс-платформенное решение</p>
+                <a href="#contact" className="btn btn-secondary">Связаться</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="portfolio-cta">
+            <Link to="/products" className="btn btn-primary">ПОСМОТРЕТЬ ДРУГИЕ ПРОЕКТЫ</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="clients-section">
+        <div className="container">
+          <h2 className="section-title">НАМ ДОВЕРЯЮТ</h2>
+          <p className="clients-subtitle">Мы работаем с компаниями различных масштабов и отраслей</p>
+          
+          <div className="clients-grid">
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 1</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 2</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 3</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 4</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 5</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 6</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 7</div>
+            </div>
+            <div className="client-logo">
+              <div className="client-placeholder">Компания 8</div>
+            </div>
+          </div>
+          
+          <p className="budget-note">МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 50 000 РУБЛЕЙ. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
+        </div>
+      </section>
+
+      <section id="contact" className="contact-section enhanced-hero">
+        <div className="container">
+          <h2 className="section-title enhanced-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
+          <p className="contact-subtitle enhanced-subtitle">Запишитесь на консультацию. Доверьте Вашу задачу профессионалам</p>
 
           <div className="contact-form">
-            <h3 className="form-title">Форма обратной связи</h3>
             <form onSubmit={handleFeedbackSubmit}>
-              <div className="form-group">
-                <label htmlFor="feedbackName">Имя</label>
-                <input type="text" id="feedbackName" name="from_name" required placeholder="Введите ваше имя" />
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="feedbackName">Имя *</label>
+                  <input type="text" id="feedbackName" name="from_name" required placeholder="Ваше имя" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedbackCompany">Компания *</label>
+                  <input type="text" id="feedbackCompany" name="company" required placeholder="Название компании" />
+                </div>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="feedbackEmail">Email *</label>
+                  <input type="email" id="feedbackEmail" name="from_email" required placeholder="ваш@email.com" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedbackPhone">Номер телефона *</label>
+                  <input type="tel" id="feedbackPhone" name="phone" required placeholder="+7 (999) 123-45-67" />
+                </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="feedbackEmail">Email</label>
-                <input type="email" id="feedbackEmail" name="from_email" required placeholder="Введите ваш email" />
+                <label htmlFor="feedbackMessage">Несколько слов о Вашем проекте *</label>
+                <textarea id="feedbackMessage" name="message" required placeholder="Опишите ваш проект, удобный способ связи или другие важные детали"></textarea>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="feedbackMessage">Сообщение</label>
-                <textarea id="feedbackMessage" name="message" required placeholder="Расскажите о вашем проекте или задайте вопрос"></textarea>
+              <div className="form-group checkbox-group">
+                <input type="checkbox" id="privacy" required />
+                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
+                {isSubmitting ? 'Отправка...' : 'ОТПРАВИТЬ'}
               </button>
             </form>
             {submitMessage && <p className={`submit-message ${messageType}`}>{submitMessage}</p>}
@@ -257,8 +278,9 @@ const About = ({ theme, toggleTheme }) => {
                           <h3 className="footer-title">Быстрые ссылки</h3>
                           <ul className="footer-links">
                             <li><Link to="/">Главная</Link></li>
-                            <li><Link to="/products">Продукты</Link></li>
-                                                     </ul>
+                            <li><Link to="/portfolio">Портфолио</Link></li>
+                            <li><Link to="/contacts">Контакты</Link></li>
+                          </ul>
                         </div>
           </div>
 
