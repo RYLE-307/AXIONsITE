@@ -263,7 +263,7 @@ const About = ({ theme, toggleTheme }) => {
           </div>
 
           <div className="footer-bottom">
-            <p>&copy; 2025 AxionLabs. Все права защищены.</p>
+            <p>&copy; 2026 AxionLabs. Все права защищены.</p>
           </div>
         </div>
       </footer>
