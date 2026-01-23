@@ -10,7 +10,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
 
   const projects = [
     {
-      id: 1,
+      id: 'AxionTMP',
       title: 'AxionTMP - Test Management Platform',
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',

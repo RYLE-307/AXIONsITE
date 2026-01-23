@@ -10,7 +10,7 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
 
   const projects = [
     {
-      id: 1,
+      id: 'AxionTMP',
       title: 'AxionTMP - Test Management Platform',
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
@@ -26,7 +26,7 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
    
   ];
 
-  const project = projects.find(p => p.id === parseInt(id));
+  const project = projects.find(p => p.id === id);
 
   if (!project) {
     return (
