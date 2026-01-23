@@ -134,7 +134,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
         <div className="container">
           <h2 className="section-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
           <p>МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 50 000 РУБЛЕЙ. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
-          <Link to="/contacts" className="btn btn-primary">СВЯЗАТЬСЯ С НАМИ</Link>
+          <Link to="/Contacts" className="btn btn-primary">СВЯЗАТЬСЯ С НАМИ</Link>
         </div>
       </section>
 

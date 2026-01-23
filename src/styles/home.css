@@ -201,7 +201,7 @@
 .section-title {
   text-align: center;
   font-size: 36px;
-  margin-bottom: 50px;
+  
   color: var(--text-primary);
 
 }
@@ -1328,12 +1328,12 @@
 
 .portfolio-cta-section h2 {
   font-size: 36px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 .portfolio-cta-section p {
   font-size: 18px;
-  margin-bottom: 30px;
+  margin-bottom: 80px;
   opacity: 0.9;
   max-width: 600px;
   margin-left: auto;
@@ -2126,7 +2126,7 @@
   font-size: 42px;
   font-weight: 800;
   color: white;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
   position: relative;
   text-align: center;
   background: linear-gradient(135deg, white 0%, rgba(255, 255, 255, 0.7) 100%);
