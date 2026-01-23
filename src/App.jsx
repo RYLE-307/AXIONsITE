@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import About from './pages/About';
 import Portfolio from './pages/Portfolio';
 import ProjectDetail from './pages/ProjectDetail';
@@ -35,7 +35,7 @@ function App() {
 
   return (
     <ToastProvider>
-      <Router basename={process.env.NODE_ENV === 'production' ? '/AxionLabs' : ''}>
+      <Router>
         <div className="app">
           <Routes>
             <Route path="/" element={<About theme={theme} toggleTheme={toggleTheme} />} />
