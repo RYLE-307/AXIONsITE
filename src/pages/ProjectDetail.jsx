@@ -173,15 +173,6 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
             </div>
           </div>
 
-          {/* НАД ПРОЕКТОМ РАБОТАЛИ */}
-          <div className="project-section">
-            <h2 className="section-title">НАД ПРОЕКТОМ РАБОТАЛИ</h2>
-            <div className="team-roles">
-              {project.works.map(role => (
-                <span key={role} className="role-item">{role}</span>
-              ))}
-            </div>
-          </div>
 
         </div>
       </section>
