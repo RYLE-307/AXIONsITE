@@ -3,11 +3,44 @@ import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import '../styles/global.css';
 import '../styles/home.css';
+import emailjs from '@emailjs/browser';
+
 
 const ProjectDetail = ({ theme, toggleTheme }) => {
-  const { id } = useParams();
-  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // 2. Получите id из URL параметров
+  const { id } = useParams();
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+    setMessageType('');
+
+    try {
+      await emailjs.sendForm(
+        'service_zgm9uap',
+        'template_g1ls0zg',
+        e.target,
+        'JRXdjzxl5wloLMLHS'
+      );
+      setSubmitMessage('Спасибо! Ваше сообщение отправлено.');
+      setMessageType('success');
+      e.target.reset();
+    } catch (error) {
+      setSubmitMessage('Ошибка отправки. Попробуйте позже.');
+      setMessageType('error');
+      console.error('EmailJS error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
 
   const projects = [
     {
@@ -21,7 +54,7 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
       image: process.env.PUBLIC_URL + '/img/first.jpg',
       status: 'В разработке',
       client: 'AxionLabs',
-      duration: '6 месяцев',
+      duration: '5 месяцев',
       team: '5 разработчиков'
     },
    
@@ -187,28 +220,48 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
         <div className="container">
           <div className="contact-content">
             <h2 className="section-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
-            <p>МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 10 000 EURO. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
+            <p>МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 50 000 РУБЛЕЙ. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
             
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+             <div className="contact-form">
+            <form onSubmit={handleFeedbackSubmit}>
               <div className="form-row">
-                <input type="text" placeholder="Имя*" required />
-                <input type="text" placeholder="Компания*" required />
-              </div>
-              <div className="form-row">
-                <input type="email" placeholder="Email*" required />
-                <input type="tel" placeholder="Номер телефона*" required />
-              </div>
-              <textarea placeholder="Несколько слов о Вашем проекте, удобный способ связи или другие важные детали" rows="4"></textarea>
-              
-              <div className="form-consent">
-                <input type="checkbox" id="consent" required />
-                <label htmlFor="consent">
-                  Да, я прочитал и согласен с <a href="/privacy">Политикой конфиденциальности</a>
-                </label>
+                <div className="form-group">
+                  <label htmlFor="feedbackName">Имя *</label>
+                  <input type="text" id="feedbackName" name="from_name" required placeholder="Ваше имя" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedbackCompany">Компания *</label>
+                  <input type="text" id="feedbackCompany" name="company" required placeholder="Название компании" />
+                </div>
               </div>
               
-              <button type="submit" className="btn btn-primary">ОТПРАВИТЬ</button>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="feedbackEmail">Email *</label>
+                  <input type="email" id="feedbackEmail" name="from_email" required placeholder="ваш@email.com" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedbackPhone">Номер телефона *</label>
+                  <input type="tel" id="feedbackPhone" name="phone" required placeholder="+7 (999) 123-45-67" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="feedbackMessage">Несколько слов о Вашем проекте *</label>
+                <textarea id="feedbackMessage" name="message" required placeholder="Опишите ваш проект, удобный способ связи или другие важные детали"></textarea>
+              </div>
+
+              <div className="form-group checkbox-group">
+                <input type="checkbox" className='checkbox-input' id="privacy" required />
+                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Отправка...' : 'ОТПРАВИТЬ'}
+              </button>
             </form>
+            {submitMessage && <p className={`submit-message ${messageType}`}>{submitMessage}</p>}
+          </div>
           </div>
         </div>
       </section>

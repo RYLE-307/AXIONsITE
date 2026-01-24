@@ -189,7 +189,7 @@ const About = ({ theme, toggleTheme }) => {
               </div>
 
               <div className="form-group checkbox-group">
-                <input type="checkbox" id="privacy" required />
+                <input type="checkbox" className='checkbox-input' id="privacy" required />
                 <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
               </div>
 
