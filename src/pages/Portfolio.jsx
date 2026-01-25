@@ -16,7 +16,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
       works: ['Design', 'Front-end', 'Back-end', 'Testing'],
-      stack: ['React', 'Node.js', 'PostgreSQL', 'React Router DOM', 'Context API'],
+      stack: ['React', 'PostgreSQL', 'CSS3' , 'GOlang'],
       architecture: ['Модульная структура', 'Переиспользуемые UI компоненты', 'Пользовательские хуки для работы с API', 'Адаптивный  Слой для работы с API и данными'],
       image: process.env.PUBLIC_URL + '/img/maybe.jpg',
       status: 'В разработке'

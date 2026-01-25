@@ -379,8 +379,15 @@ textarea:focus {
   opacity: 1;
 }
 
+.tech_li{
+  display: flex;
+}
 
+.icon_stack{
+  width: 25%;
 
+  margin-left: auto;
+}
 
 /* Анимации */
 @keyframes fadeIn {

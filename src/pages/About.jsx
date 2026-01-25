@@ -8,6 +8,22 @@ const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
 const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
 const Tech = process.env.PUBLIC_URL + '/tech.svg';
 
+const React_icon = process.env.PUBLIC_URL + '/react.svg';
+const python = process.env.PUBLIC_URL + '/python.svg';
+const mysql = process.env.PUBLIC_URL + '/mysql.svg';
+const go = process.env.PUBLIC_URL + '/go.svg';
+const database = process.env.PUBLIC_URL + '/database.svg';
+const PostgreSQL = process.env.PUBLIC_URL + '/postgresql.svg';
+const docker = process.env.PUBLIC_URL + '/docker.svg';
+const github = process.env.PUBLIC_URL + '/github.svg';
+const aws = process.env.PUBLIC_URL + '/aws.svg';
+const javascript = process.env.PUBLIC_URL + '/javascript.svg';
+const Typescript = process.env.PUBLIC_URL + '/Typescript.svg';
+const Rust = process.env.PUBLIC_URL + '/Rust.svg';
+
+
+
+
 
 const About = ({ theme, toggleTheme }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,10 +40,10 @@ const About = ({ theme, toggleTheme }) => {
 
     try {
       await emailjs.sendForm(
-        'service_zgm9uap', // Замените на ваш Service ID из EmailJS
-        'template_g1ls0zg', // Замените на ваш Template ID
+        'service_zgm9uap', 
+        'template_g1ls0zg', 
         e.target,
-        'JRXdjzxl5wloLMLHS' // Замените на ваш Public Key
+        'JRXdjzxl5wloLMLHS' 
       );
       setSubmitMessage('Спасибо! Ваше сообщение отправлено.');
       setMessageType('success');
@@ -113,16 +129,16 @@ const About = ({ theme, toggleTheme }) => {
               
               <h3>ДЛЯ ОБЕСПЕЧЕНИЯ ВЫСОКОЙ ПРОИЗВОДИТЕЛЬНОСТИ ВЫБИРАЕМ:</h3>
               <ul className="tech-stack">
-                <li>React.js для современных веб-приложений</li>
-                <li>JavaScript (ES6+) — фундамент веб-разработки.</li>
-                <li>TypeScript — для повышения надежности, поддерживаемости и масштабируемости кода.</li>
-                <li>Rust — для системного программирования, где критичны безопасность памяти и производительность.</li>
-                <li> Go для backend-разработки</li>
-                <li>Docker — создание контейнеров для унификации окружения.</li>
-                <li>Python для аналитики и AI</li>
-                <li>Облачные платформы (AWS, Azure)</li>
-                <li>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания.</li>
-                <li>Современные базы данных</li>
+                <li className='tech_li'><p>React.js для современных веб-приложений </p> <img className='icon_stack' src={React_icon} alt=""/></li> 
+                <li className='tech_li' ><p>JavaScript (ES6+) — фундамент веб-разработки. </p> <img className='icon_stack' src={javascript} alt=""/></li>
+                <li className='tech_li' ><p>TypeScript — для повышения надежности, поддерживаемости и масштабируемости кода. </p> <img className='icon_stack' src={Typescript} alt=""/></li>
+                <li className='tech_li' ><p>Rust — для системного программирования, где критичны безопасность памяти и производительность. </p> <img className='icon_stack' src={Rust} alt=""/></li>
+                <li className='tech_li' ><p> Go для backend-разработки </p> <img className='icon_stack' src={go} alt=""/></li>
+                <li className='tech_li' ><p>Docker — создание контейнеров для унификации окружения. </p> <img className='icon_stack' src={docker} alt=""/></li>
+                <li className='tech_li' ><p>Python для аналитики и AI </p> <img className='icon_stack' src={python} alt=""/></li>
+                <li className='tech_li' ><p>Облачные платформы (AWS, Azure) </p> <img className='icon_stack' src={aws} alt=""/></li>
+                <li className='tech_li' ><p>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания. </p> <img className='icon_stack' src={github} alt=""/></li>
+                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li'><p>PostgreSQL</p> <img className='icon_stack' src={PostgreSQL} alt=""/></li><li className='tech_li'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
               </ul>
               
               <p>Развивающемуся бизнесу часто становится мало готовых сервис-решений, и требуется индивидуальная система, способная покрыть все действующие потребности.</p>

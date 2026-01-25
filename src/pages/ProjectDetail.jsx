@@ -50,7 +50,7 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
       fullDescription: '',
       works: ['Исследование', 'Дизайн', 'Frontend разработка', 'Backend разработка', 'Тестирование', 'Документация'],
-      stack: ['React 18+', 'Node.js', 'PostgreSQL', 'Docker', 'CSS3'],
+      stack: ['React', 'PostgreSQL', 'CSS3' , 'GOlang'],
       image: process.env.PUBLIC_URL + '/img/first.jpg',
       status: 'В разработке',
       client: 'AxionLabs',
