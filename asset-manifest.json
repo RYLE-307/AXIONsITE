@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AxionLabs/static/css/main.14e8d3dd.css",
-    "main.js": "/AxionLabs/static/js/main.ebb0460e.js",
+    "main.css": "/AxionLabs/static/css/main.f3e67e1c.css",
+    "main.js": "/AxionLabs/static/js/main.ef166cf7.js",
     "static/js/453.026aae32.chunk.js": "/AxionLabs/static/js/453.026aae32.chunk.js",
     "index.html": "/AxionLabs/index.html",
-    "main.14e8d3dd.css.map": "/AxionLabs/static/css/main.14e8d3dd.css.map",
-    "main.ebb0460e.js.map": "/AxionLabs/static/js/main.ebb0460e.js.map",
+    "main.f3e67e1c.css.map": "/AxionLabs/static/css/main.f3e67e1c.css.map",
+    "main.ef166cf7.js.map": "/AxionLabs/static/js/main.ef166cf7.js.map",
     "453.026aae32.chunk.js.map": "/AxionLabs/static/js/453.026aae32.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.14e8d3dd.css",
-    "static/js/main.ebb0460e.js"
+    "static/css/main.f3e67e1c.css",
+    "static/js/main.ef166cf7.js"
   ]
 }
