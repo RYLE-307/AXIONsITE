@@ -2770,6 +2770,7 @@
   }
 
   .landing-nav-links.active {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
     margin-top: 20px;
     border-radius: 25px;
     z-index: 10;
@@ -2777,9 +2778,14 @@
   }
 
   .nav-link {
-    padding: 10px 0;
+    padding: 10px 10px;
     border-bottom: 1px solid var(--border-color);
   }
+.nav-link:hover{
+  background: rgba(96, 26, 207, 0.411);
+  border-radius: 20px;
+  color: white;
+}
 
   .nav-link:last-child {
     border-bottom: none;
