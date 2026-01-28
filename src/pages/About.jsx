@@ -8,20 +8,20 @@ import PrivacyPolicy from '../components/UI/PrivacyPolicy';
 const BaseAltLogo = import.meta.env.BASE_URL + 'Basealt_logo_inv.svg';
 const VegaLogo = import.meta.env.BASE_URL + 'logo_vega.svg';
 
-const React_icon = import.meta.env.BASE_URL + 'react1.svg';
-const python = import.meta.env.BASE_URL + 'python1.svg';
-const mysql = import.meta.env.BASE_URL + 'mysql1.svg';
-const go = import.meta.env.BASE_URL + 'go1.svg';
-const database = import.meta.env.BASE_URL + 'database1.svg';
-const PostgreSQL = import.meta.env.BASE_URL + 'postgresql1.svg';
-const docker = import.meta.env.BASE_URL + 'docker1.svg';
-const github = import.meta.env.BASE_URL + 'github1.svg';
-const aws = import.meta.env.BASE_URL + 'aws1.svg';
-const javascript = import.meta.env.BASE_URL + 'javascript1.svg';
-const Typescript = import.meta.env.BASE_URL + 'Typescript1.svg';
-const Rust = import.meta.env.BASE_URL + 'Rust1.svg';
-const next = import.meta.env.BASE_URL + 'next1.svg';
-const redis = import.meta.env.BASE_URL + 'redis1.svg';
+const React_icon = import.meta.env.BASE_URL + 'react2.svg';
+const python = import.meta.env.BASE_URL + 'python2.svg';
+const mysql = import.meta.env.BASE_URL + 'mysql2.svg';
+const go = import.meta.env.BASE_URL + 'go2.svg';
+const database = import.meta.env.BASE_URL + 'database2.svg';
+const PostgreSQL = import.meta.env.BASE_URL + 'postgresql2.svg';
+const docker = import.meta.env.BASE_URL + 'docker2.svg';
+const github = import.meta.env.BASE_URL + 'github2.svg';
+const aws = import.meta.env.BASE_URL + 'aws2.svg';
+const javascript = import.meta.env.BASE_URL + 'javascript2.svg';
+const Typescript = import.meta.env.BASE_URL + 'Typescript2.svg';
+const Rust = import.meta.env.BASE_URL + 'Rust2.svg';
+const next = import.meta.env.BASE_URL + 'next2.svg';
+const redis = import.meta.env.BASE_URL + 'redis2.svg';
 
 
 
