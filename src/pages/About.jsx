@@ -295,7 +295,7 @@ const About = ({ theme, toggleTheme }) => {
     </div>
   </div>
   
-  <a href="#contact" className="btn btn-primary hero-cta">
+  <a href="#contacts" className="btn btn-primary hero-cta">
     <i className="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ ПРОЕКТА
   </a>
 </section>
