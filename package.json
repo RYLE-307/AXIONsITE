@@ -1,6 +1,6 @@
 {
   "name": "axionlabs-site",
-  "homepage": "https://axionlabs.ru",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
